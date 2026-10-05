@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fond de secours : il est peint avant le chargement de style.css, pour
+       empêcher tout flash blanc lors d'une navigation complète. -->
+  <style>
+    html { background: #F2F6F5; color-scheme: light; }
+    html[data-theme="nuit"] { background: #0A1A22; color-scheme: dark; }
+    @media (prefers-color-scheme: dark) {
+      html:not([data-theme="jour"]) { background: #0A1A22; color-scheme: dark; }
+    }
+  </style>
+  <!-- ======================================================================
+       A LIRE AVANT DE TOUCHER : ce script doit rester ICI, en haut du <head>.
+       ----------------------------------------------------------------------
+       Il applique le theme (jour ou nuit) AVANT la premiere peinture de la
+       page. S'il etait plus bas, ou dans app.js, le navigateur afficherait
+       d'abord la palette claire par defaut : un visiteur en mode nuit verrait
+       un eclair blanc a chaque changement de page.
+
+       Il est volontairement ecrit en dur et non dans un fichier separe : un
+       fichier externe serait telecharge trop tard.
+       ====================================================================== -->
+  <script>
+    try {
+      var t = localStorage.getItem("sg-theme");
+      if (t === "jour" || t === "nuit") {
+        document.documentElement.setAttribute("data-theme", t);
+      }
+    } catch (e) { /* navigation privee : on laisse le systeme decider */ }
+
+    /* LES TRANSITIONS ENTRE PAGES N'EXISTENT PAS PARTOUT.
+       Firefox gere la propriete view-transition-name, mais PAS encore les
+       transitions d'une page a l'autre. Tester la propriete en CSS donnait
+       donc un faux positif : le repli ne se declenchait jamais et Firefox
+       n'affichait aucune animation.
+
+       On teste ici l'evenement "pagereveal", qui n'existe QUE dans les
+       navigateurs sachant faire ces transitions. Si absent, on pose une
+       classe que le CSS utilise pour jouer une animation d'arrivee. */
+    if (!("onpagereveal" in window)) {
+      document.documentElement.className += " sans-transition-de-page";
+    }
+  </script>
+
+
+  <!-- ======================================================================
+       LE SEUL BLOC A MODIFIER DANS CE FICHIER
+       ----------------------------------------------------------------------
+       Le contenu visible vient de assets/js/data.js, et le menu est construit
+       tout seul a partir de la liste PAGES. Seules ces lignes-ci sont ecrites
+       en dur : ce sont celles que lisent Google et les apercus de lien
+       (WhatsApp, LinkedIn), qui n'executent pas toujours le JavaScript.
+       ====================================================================== -->
+
+  <title>Projets — Style Garraway</title>
+  <meta name="description" content="Trois infrastructures montées, testées et documentées : serveur FTP Windows Server 2022, contrôleur de domaine Active Directory, GLPI couplé à OCS Inventory.">
+  <meta name="author" content="Style Garraway">
+
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="Projets — Style Garraway">
+  <meta property="og:description" content="Trois infrastructures montées, testées et documentées : serveur FTP Windows Server 2022, contrôleur de domaine Active Directory, GLPI couplé à OCS Inventory.">
+  <meta property="og:image" content="assets/img/apercu.png">
+  <meta property="og:image:alt" content="Style Garraway, administrateur reseau, BTS SIO SISR">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body data-page="projets">
+
+  <noscript>
+    <p class="sans-js">
+      Ce site utilise JavaScript pour afficher son contenu. Vous pouvez me
+      contacter sur <a href="https://www.linkedin.com/in/style-garraway-1413b0350/">LinkedIn</a>.
+    </p>
+  </noscript>
+  <div class="page">
+
+    <!-- LE FIL : element decoratif, masque aux lecteurs d'ecran.
+         Il se remplit au fur et a mesure du defilement. -->
+    <div class="fil" aria-hidden="true"><span class="fil__signal"></span></div>
+
+    <main id="contenu">
+
+      <section class="section" id="projets" aria-labelledby="page-titre">
+        <h1 class="section__titre" id="page-titre"></h1>
+        <p class="section__chapo" id="page-chapo"></p>
+
+        <ul class="projets" id="projets-liste"></ul>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- L'ordre compte : data.js d'abord (le contenu),
+       app.js ensuite (la mecanique qui le lit et fabrique le menu). -->
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+
+</body>
+</html>

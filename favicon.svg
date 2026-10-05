@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Style Garraway">
+  <!-- Le Fil et son noeud : la même idée que sur le site, réduite à 64 pixels. -->
+  <defs>
+    <linearGradient id="fil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#0B6E6D"/>
+      <stop offset="55%"  stop-color="#3B3A8C"/>
+      <stop offset="100%" stop-color="#8A6210"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="#0A1A22"/>
+
+  <!-- Le fil vertical -->
+  <rect x="30" y="8" width="4" height="48" rx="2" fill="url(#fil)"/>
+
+  <!-- Le noeud, posé sur le fil -->
+  <rect x="21" y="21" width="22" height="22" rx="3"
+        transform="rotate(45 32 32)"
+        fill="#0A1A22" stroke="#3FD0C4" stroke-width="4"/>
+</svg>

@@ -1,0 +1,5 @@
+# Fichiers de l'outil de travail et du systeme : jamais en ligne.
+.claude/
+Thumbs.db
+.DS_Store
+*.tmp
