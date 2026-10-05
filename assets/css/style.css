@@ -1,0 +1,2412 @@
+/* ==========================================================================
+   style.css — L'APPARENCE DU SITE
+   --------------------------------------------------------------------------
+   ORGANISATION DU FICHIER (utilise Ctrl+F pour sauter à une section)
+
+     01. VARIABLES — toutes les couleurs et tailles sont ici
+     02. MODE NUIT
+     03. POLICES
+     04. RÉINITIALISATION
+     05. ACCESSIBILITÉ (focus, lien d'évitement)
+     06. TYPOGRAPHIE DE BASE
+     07. MISE EN PAGE GÉNÉRALE
+     08. EN-TÊTE ET NAVIGATION
+     09. ★ LE FIL — l'élément signature
+     10. HERO
+     10 bis. SOMMAIRE DE L'ACCUEIL
+     11. SECTIONS
+     12. À PROPOS
+     13. COMPÉTENCES
+     14. PROJETS
+     15. PAGE D'UN PROJET
+     16. PARCOURS
+     16 bis. CERTIFICATIONS ET BADGES
+     17. VEILLE
+     18. CONTACT
+     19. PIED DE PAGE
+     20. RAPPELS TODO
+     21. GRANDS ÉCRANS
+     21 bis. TRANSITION ENTRE LES PAGES
+     22. ANIMATIONS RÉDUITES ET IMPRESSION
+
+   POUR CHANGER UNE COULEUR : va en section 01, modifie la valeur.
+   Ne cherche pas ailleurs, toutes les couleurs partent de là.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   01. VARIABLES
+   ========================================================================== */
+
+:root {
+
+  /* --- Couleurs, mode Jour (par défaut) ---------------------------------- */
+  --brume:    #F2F6F5;   /* fond de page — blanc légèrement verdi */
+  --panneau:  #FFFFFF;   /* cartes et encadrés */
+  --encre:    #0D2531;   /* titres et texte principal */
+  --ardoise:  #46616F;   /* texte secondaire */
+  --trait:    #D3DFE1;   /* filets et bordures décoratives */
+  --trait-fort: #6B8390; /* contour des champs de saisie — voir la note ci-dessous */
+  --voile:    #E7EFEF;   /* fonds discrets (étiquettes, pastilles) */
+
+  /* Pourquoi deux couleurs de trait ?
+     Un filet décoratif peut être discret, mais le contour d'un champ de
+     saisie doit atteindre 3:1 de contraste (règle WCAG 1.4.11) : c'est lui
+     qui indique où cliquer. --trait ne fait que 1,25:1, d'où --trait-fort
+     qui atteint 3,48:1 sur le fond des champs. */
+
+  /* --- Le Fil : dégradé à trois arrêts ----------------------------------- */
+  --fil-1: #0B6E6D;      /* lagon */
+  --ok: #0F7B45;         /* vert « terminal » : voyant en ligne, succès */
+  --grille: rgba(11, 110, 109, .06);   /* quadrillage de fond, façon écran de supervision */
+  --fil-2: #3B3A8C;      /* indigo */
+  --fil-3: #8A6210;      /* or */
+
+  /* --- Couleurs d'usage --------------------------------------------------- */
+  --accent:       var(--fil-1);   /* liens, focus, boutons */
+  --accent-fort:  #085150;        /* survol des liens */
+  --alerte:       #A4470B;        /* rappels TODO */
+  --alerte-fond:  #FCF0E4;
+
+  /* --- Voyants d'état des compétences ------------------------------------ */
+  --voyant-service: #0B6E6D;
+  --voyant-rodage:  #8A6210;
+  --voyant-repere:  #6B8390;
+
+  /* --- Polices ------------------------------------------------------------ */
+  --police-titre:   "Archivo", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --police-texte:   "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --police-donnees: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace;
+
+  /* --- Tailles de texte (fluides : elles s'adaptent à la largeur d'écran) - */
+  --t-hero:    clamp(2.25rem, 9vw, 4.25rem);
+  --t-titre:   clamp(1.5rem, 4.5vw, 2.25rem);
+  --t-sous:    clamp(1.15rem, 3vw, 1.4rem);
+  --t-texte:   clamp(1rem, 2.4vw, 1.0625rem);
+  --t-petit:   0.875rem;
+  --t-mini:    0.78rem;
+
+  /* --- Espacements -------------------------------------------------------- */
+  --esp-xs: 0.375rem;
+  --esp-s:  0.75rem;
+  --esp-m:  1.25rem;
+  --esp-l:  2rem;
+  --esp-xl: clamp(3rem, 9vw, 5.5rem);
+
+  /* --- Géométrie ---------------------------------------------------------- */
+  --largeur-max: 1180px;
+  --rayon:       12px;
+  --rayon-petit: 7px;
+
+  /* --- Position du Fil et décalage du contenu (mobile) -------------------- */
+  --fil-x:    12px;   /* distance entre le bord gauche et Le Fil */
+  --page-pad: 34px;   /* distance entre le bord gauche et le texte */
+
+  /* --- Ombres -------------------------------------------------------------- */
+  --ombre:      0 1px 2px rgba(13, 37, 49, .06), 0 4px 16px rgba(13, 37, 49, .06);
+  --ombre-haut: 0 2px 6px rgba(13, 37, 49, .10), 0 12px 32px rgba(13, 37, 49, .12);
+
+  color-scheme: light;
+}
+
+
+/* ==========================================================================
+   02. MODE NUIT
+   --------------------------------------------------------------------------
+   Deux déclencheurs :
+     - le visiteur a réglé son système en sombre (prefers-color-scheme)
+     - le visiteur a cliqué sur le bouton "Mode nuit" (data-theme)
+   Le bouton l'emporte toujours sur le réglage du système.
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="jour"]) {
+    --brume:   #0A1A22;
+    --panneau: #122A35;
+    --encre:   #E9F2F0;
+    --ardoise: #A3BAC4;
+    --trait:   #1F3D4A;
+    --trait-fort: #7E9AA6;
+    --voile:   #16323E;
+
+    --fil-1: #3FD0C4;
+    --ok: #4ADE80;
+    --grille: rgba(63, 208, 196, .05);
+    --fil-2: #8C8AF0;
+    --fil-3: #F2B441;
+
+    --accent:      var(--fil-1);
+    --accent-fort: #6FE3DA;
+    --alerte:      #FFB27A;
+    --alerte-fond: #2E2116;
+
+    --voyant-service: #3FD0C4;
+    --voyant-rodage:  #F2B441;
+    --voyant-repere:  #7E9AA6;
+
+    --ombre:      0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .3);
+    --ombre-haut: 0 2px 6px rgba(0, 0, 0, .4), 0 12px 32px rgba(0, 0, 0, .45);
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="nuit"] {
+  --brume:   #0A1A22;
+  --panneau: #122A35;
+  --encre:   #E9F2F0;
+  --ardoise: #A3BAC4;
+  --trait:   #1F3D4A;
+  --trait-fort: #7E9AA6;
+  --voile:   #16323E;
+
+  --fil-1: #3FD0C4;
+  --ok: #4ADE80;
+  --grille: rgba(63, 208, 196, .05);
+  --fil-2: #8C8AF0;
+  --fil-3: #F2B441;
+
+  --accent:      var(--fil-1);
+  --accent-fort: #6FE3DA;
+  --alerte:      #FFB27A;
+  --alerte-fond: #2E2116;
+
+  --voyant-service: #3FD0C4;
+  --voyant-rodage:  #F2B441;
+  --voyant-repere:  #7E9AA6;
+
+  --ombre:      0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .3);
+  --ombre-haut: 0 2px 6px rgba(0, 0, 0, .4), 0 12px 32px rgba(0, 0, 0, .45);
+
+  color-scheme: dark;
+}
+
+
+/* ==========================================================================
+   03. POLICES
+   --------------------------------------------------------------------------
+   Les fichiers .woff2 doivent être déposés dans assets/fonts/
+   Voir assets/fonts/LISEZ-MOI.txt pour savoir où les télécharger.
+
+   Si les fichiers sont absents, le navigateur utilise automatiquement la
+   police système indiquée en secours. Le site reste parfaitement lisible.
+   Aucune requête n'est faite vers Internet dans les deux cas.
+   ========================================================================== */
+
+/* Polices hébergées sur le site : le navigateur ne contacte aucun serveur
+   externe. Les fichiers sont dans assets/fonts/, leurs licences (SIL Open Font
+   License) dans assets/fonts/LICENCES.txt. Sous-ensemble « latin » : accents
+   français, « œ » et ponctuation typographique. Un caractère absent (une
+   flèche, un losange) s'affiche avec la police du système, sans erreur.
+   font-display: swap : le texte s'affiche tout de suite avec la police du
+   système, puis bascule dès que la police du site est arrivée. */
+
+@font-face {
+  font-family: "Archivo";
+  src: url("../fonts/archivo-variable.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("../fonts/atkinson-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("../fonts/atkinson-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/jetbrains-mono-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+
+/* ==========================================================================
+   04. RÉINITIALISATION
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  /* Couleur disponible dès que la feuille de styles est lue : elle évite un
+     éclat blanc derrière le contenu pendant une navigation entre pages. */
+  background: var(--brume);
+  scroll-behavior: smooth;
+  /* Décale l'ancre pour que le titre ne passe pas sous la barre collante. */
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--brume);
+  color: var(--encre);
+  font-family: var(--police-texte);
+  font-size: var(--t-texte);
+  line-height: 1.65;
+  -webkit-text-size-adjust: 100%;
+  /* Empêche tout débordement horizontal, même sur un écran de 320 px. */
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+h1, h2, h3, h4 {
+  font-family: var(--police-titre);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p { margin: 0 0 var(--esp-m); }
+p:last-child { margin-bottom: 0; }
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--accent-fort); }
+
+button { font: inherit; cursor: pointer; }
+
+
+/* ==========================================================================
+   05. ACCESSIBILITÉ
+   ========================================================================== */
+
+/* Contour de focus, visible pour toute navigation au clavier.
+   Il ne s'affiche PAS à la souris : c'est le rôle de :focus-visible. */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* Contenu réservé aux lecteurs d'écran. */
+.visuellement-cache {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Lien d'évitement : caché jusqu'à la première tabulation. */
+.evitement {
+  position: absolute;
+  top: -100px;
+  left: var(--esp-s);
+  z-index: 200;
+  padding: var(--esp-s) var(--esp-m);
+  background: var(--encre);
+  color: var(--brume);
+  border-radius: var(--rayon-petit);
+  text-decoration: none;
+  font-weight: 700;
+}
+.evitement:focus { top: var(--esp-s); }
+
+.sans-js {
+  margin: 0;
+  padding: var(--esp-m);
+  background: var(--alerte-fond);
+  color: var(--alerte);
+  text-align: center;
+}
+
+
+/* ==========================================================================
+   06. TYPOGRAPHIE DE BASE
+   ========================================================================== */
+
+/* Données techniques : IP, commandes, noms de machines, versions. */
+code, .donnees {
+  font-family: var(--police-donnees);
+  font-size: 0.9em;
+}
+
+
+/* ==========================================================================
+   07. MISE EN PAGE GÉNÉRALE
+   ========================================================================== */
+
+.page {
+  position: relative;          /* sert de repère au Fil */
+  max-width: var(--largeur-max);
+  margin: 0 auto;
+  padding-left: var(--page-pad);
+  padding-right: var(--esp-m);
+}
+
+
+/* ==========================================================================
+   08. EN-TÊTE ET NAVIGATION
+   ========================================================================== */
+
+.entete {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--brume) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--trait);
+}
+
+.entete__interieur {
+  max-width: var(--largeur-max);
+  margin: 0 auto;
+  padding: var(--esp-s) var(--esp-m);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-m);
+}
+
+.marque {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  gap: var(--esp-s);
+  text-decoration: none;
+  color: var(--encre);
+  font-family: var(--police-titre);
+  font-weight: 700;
+}
+
+/* Les initiales dans une pastille au dégradé du Fil : le rappel de l'identité. */
+.marque__initiales {
+  display: grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--fil-1), var(--fil-2) 60%, var(--fil-3));
+  color: #FFFFFF;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
+
+.marque__nom { font-size: 0.95rem; }
+
+/* --- Bouton burger (mobile uniquement) ----------------------------------- */
+.burger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-xs);
+  padding: var(--esp-xs) var(--esp-s);
+  background: transparent;
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon-petit);
+  color: var(--encre);
+  font-size: var(--t-petit);
+  /* 44 px : la taille minimale confortable pour un pouce. */
+  min-height: 44px;
+}
+
+.burger__barres {
+  position: relative;
+  width: 18px; height: 2px;
+  background: currentColor;
+  transition: background .18s;
+}
+.burger__barres::before,
+.burger__barres::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 18px; height: 2px;
+  background: currentColor;
+  transition: transform .18s;
+}
+.burger__barres::before { top: -6px; }
+.burger__barres::after  { top:  6px; }
+
+/* Le burger se transforme en croix quand le menu est ouvert. */
+.burger[aria-expanded="true"] .burger__barres { background: transparent; }
+.burger[aria-expanded="true"] .burger__barres::before { transform: translateY(6px) rotate(45deg); }
+.burger[aria-expanded="true"] .burger__barres::after  { transform: translateY(-6px) rotate(-45deg); }
+
+/* --- Menu (replié par défaut sur mobile) --------------------------------- */
+.nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  display: none;
+  padding: var(--esp-s) var(--esp-m) var(--esp-m);
+  background: var(--brume);
+  border-bottom: 1px solid var(--trait);
+  box-shadow: var(--ombre);
+}
+.nav.est-ouvert { display: block; }
+
+.nav__liste { display: flex; flex-direction: column; }
+
+.nav__liste a {
+  display: block;
+  padding: var(--esp-s) 0;
+  color: var(--encre);
+  text-decoration: none;
+  border-bottom: 1px solid var(--trait);
+}
+
+/* Indicateur de section active : une barre au dégradé du Fil. */
+.nav__liste a[aria-current] {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.theme {
+  margin-top: var(--esp-m);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-xs);
+  padding: var(--esp-xs) var(--esp-s);
+  background: var(--voile);
+  border: 1px solid var(--trait);
+  border-radius: 999px;
+  color: var(--encre);
+  font-size: var(--t-petit);
+}
+
+.theme__icone {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--fil-3), var(--fil-2));
+}
+
+
+/* ==========================================================================
+   09. ★ LE FIL — L'ÉLÉMENT SIGNATURE
+   --------------------------------------------------------------------------
+   Une ligne verticale unique qui traverse toute la page.
+   Elle s'allume au fur et à mesure du défilement : sa hauteur est pilotée
+   par app.js, qui met à jour la variable --progression (de 0% à 100%).
+
+   Chaque titre de section porte un losange posé sur ce fil : le "noeud".
+   ========================================================================== */
+
+.fil {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--fil-x);
+  width: 2px;
+  background: var(--trait);   /* la piste éteinte */
+  border-radius: 2px;
+}
+
+.fil__signal {
+  display: block;
+  width: 100%;
+  height: var(--progression, 0%);
+  border-radius: 2px;
+  /* Le dégradé fait toujours la hauteur totale du fil : plus on descend,
+     plus on révèle de couleurs. C'est ça, le signal qui parcourt l'infra. */
+  background-image: linear-gradient(to bottom, var(--fil-1), var(--fil-2) 55%, var(--fil-3));
+  background-size: 100% 100vh;
+  background-repeat: repeat-y;
+  transition: height .12s linear;
+}
+
+/* Le noeud : un losange centré sur le fil, à hauteur de chaque titre. */
+.section__titre,
+.hero__statut {
+  position: relative;
+}
+
+.section__titre::before,
+.hero__statut::before {
+  content: "";
+  position: absolute;
+  top: 0.55em;
+  left: calc(var(--fil-x) - var(--page-pad) - 5px);
+  width: 12px; height: 12px;
+  background: var(--brume);
+  border: 2px solid var(--trait);
+  transform: rotate(45deg);
+  border-radius: 2px;
+  transition: border-color .3s, background-color .3s;
+}
+
+/* Le noeud de la section visible s'allume. */
+.section.est-active .section__titre::before,
+.hero.est-active .hero__statut::before {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+
+/* ==========================================================================
+   10. HERO
+   ========================================================================== */
+
+.hero {
+  padding: var(--esp-xl) 0 var(--esp-xl);
+  max-width: 46ch;
+}
+
+/* Le portrait — deux présentations à partir d'UNE seule image.
+   Sur téléphone : un petit rond au-dessus du texte, pour ne pas manger
+   l'écran. Sur grand écran (voir section 21) : un grand panneau à droite,
+   dans l'espace qui était vide. */
+.hero__cadre {
+  width: 132px;
+  height: 132px;
+  margin-bottom: var(--esp-m);
+  padding: 3px;
+  border-radius: 50%;
+  /* Un anneau au dégradé du Fil, en écho au reste du site. */
+  background: linear-gradient(135deg, var(--fil-1), var(--fil-2) 55%, var(--fil-3));
+}
+
+/* Le cadre de découpe : c'est lui qui fait le rond et qui coupe ce qui
+   dépasse. La photo, elle, est volontairement plus grande que ce cercle. */
+.hero__cercle {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--voile);
+  border: 3px solid var(--brume);
+}
+
+/* CENTRAGE DU VISAGE — comment ces trois valeurs ont été calculées.
+   La photo fait 880 x 668, et le visage se trouve à 37 % de sa hauteur,
+   donc trop haut pour un cercle. On l'agrandit de 20 % et on rogne le bas :
+     width: 158%   → 120 % de hauteur, en gardant la proportion 880/668
+     margin-left   → la moitié du débordement horizontal, pour recentrer
+   Résultat : le visage tombe à 45 % du cercle, la bonne hauteur pour un
+   portrait (un peu d'air au-dessus de la tête).
+
+   ATTENTION au margin-left : la tête n'est PAS au centre de la photo. Son axe
+   est mesuré à 51,34 % de la largeur, soit 11,8 px trop à droite. Un simple
+   recadrage centré (-29 %) reportait ce décalage à l'écran. Les -31,11 %
+   compensent : la moitié du débordement, plus la correction du décalage.
+
+   SI TU CHANGES DE PHOTO : remets margin-left à la moitié de (width - 100 %),
+   puis ajuste au besoin si le visage n'est pas centré dans la photo. */
+.hero__portrait {
+  display: block;
+  width: 158%;
+  height: auto;
+  margin-left: -31.11%;
+  /* Indispensable : la règle générale img { max-width: 100% } de la section 04
+     empêcherait sinon la photo de dépasser du cercle, donc tout zoom. */
+  max-width: none;
+}
+
+.hero__statut {
+  margin-bottom: var(--esp-s);
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ardoise);
+}
+
+.hero__nom {
+  font-size: var(--t-hero);
+  margin-bottom: var(--esp-xs);
+}
+
+.hero__poste {
+  margin-bottom: var(--esp-m);
+  font-family: var(--police-titre);
+  font-size: var(--t-sous);
+  font-weight: 700;
+  /* Le nom du poste reprend le dégradé du Fil. */
+  background-image: linear-gradient(100deg, var(--fil-1), var(--fil-2) 55%, var(--fil-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Secours si le navigateur ne sait pas découper le texte : on garde une
+     couleur pleine, jamais de texte invisible. */
+  -webkit-text-fill-color: transparent;
+}
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero__poste { color: var(--accent); -webkit-text-fill-color: currentColor; }
+}
+
+.hero__accroche {
+  font-size: clamp(1.05rem, 3vw, 1.3rem);
+  line-height: 1.5;
+}
+
+.hero__angle {
+  padding-left: var(--esp-m);
+  border-left: 3px solid var(--accent);
+  color: var(--ardoise);
+  font-size: var(--t-petit);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-s);
+  margin: var(--esp-m) 0 var(--esp-l);
+  /* La rangée de boutons n'est pas du texte : elle ne doit pas être bridée
+     par la largeur de lecture appliquée au reste de la colonne, sinon les
+     boutons se retrouvent à l'étroit. */
+  max-width: none;
+}
+
+/* La bande de chiffres clés. Deux colonnes sur téléphone, quatre au-delà. */
+.chiffres {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--esp-m) var(--esp-l);
+  margin-top: var(--esp-xl);
+  padding-top: var(--esp-l);
+  border-top: 1px solid var(--trait);
+}
+@media (min-width: 700px) {
+  .chiffres { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.chiffre {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+/* Le petit trait au dégradé du Fil, au-dessus de chaque nombre. */
+.chiffre::before {
+  content: "";
+  width: 28px;
+  height: 3px;
+  margin-bottom: var(--esp-xs);
+  border-radius: 2px;
+  background-image: linear-gradient(90deg, var(--fil-1), var(--fil-2), var(--fil-3));
+}
+.chiffre__nombre {
+  font-family: var(--police-titre);
+  font-size: clamp(2rem, 6vw, 2.75rem);
+  line-height: 1;
+  /* Chiffres de largeur identique : le nombre ne « tremble » pas pendant
+     qu'il défile. */
+  font-variant-numeric: tabular-nums;
+  color: var(--encre);
+}
+.chiffre__libelle {
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+  max-width: 24ch;
+}
+
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--esp-xs);
+  padding: 0.8rem 1.5rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  border: 2px solid var(--accent);
+  transition: transform .15s, box-shadow .15s;
+
+  /* SANS CES DEUX LIGNES, LES BOUTONS SE CASSENT.
+     Un bouton dans une rangée flex rétrécit par défaut : si la rangée est
+     trop étroite, il se comprime et son libellé se coupe sur trois lignes.
+     flex: none l'en empêche, nowrap garde le texte sur une ligne, et le
+     flex-wrap de la rangée les fait passer l'un sous l'autre s'il le faut. */
+  flex: none;
+  white-space: nowrap;
+}
+
+.bouton--plein {
+  background: var(--accent);
+  color: var(--brume);
+}
+.bouton--plein:hover {
+  color: var(--brume);
+  transform: translateY(-2px);
+  box-shadow: var(--ombre);
+}
+
+.bouton--vide {
+  background: transparent;
+  color: var(--accent);
+}
+.bouton--vide:hover { transform: translateY(-2px); box-shadow: var(--ombre); }
+
+
+/* ==========================================================================
+   10 bis. SOMMAIRE DE L'ACCUEIL
+   --------------------------------------------------------------------------
+   Les six vignettes qui mènent aux autres pages. C'est la seule chose sous
+   le hero : en 30 secondes, on voit tout ce que contient le site.
+   ========================================================================== */
+
+.sommaire {
+  display: grid;
+  gap: var(--esp-s);
+  margin-top: var(--esp-xl);
+}
+
+.vignette {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: 100%;
+  padding: var(--esp-m) calc(var(--esp-xl) * 0.6) var(--esp-m) var(--esp-m);
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+  text-decoration: none;
+  color: var(--encre);
+  transition: transform .18s, box-shadow .18s, border-color .18s;
+}
+.vignette:hover,
+.vignette:focus-visible {
+  color: var(--encre);
+  transform: translateY(-3px);
+  box-shadow: var(--ombre-haut);
+  border-color: var(--accent);
+}
+
+/* Un liseré au dégradé du Fil sur le bord gauche de chaque vignette. */
+.vignette::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 12px; bottom: 12px;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, var(--fil-1), var(--fil-2), var(--fil-3));
+  opacity: .55;
+  transition: opacity .18s;
+}
+.vignette:hover::before { opacity: 1; }
+
+.vignette__titre {
+  font-family: var(--police-titre);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.vignette__resume {
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+.vignette__fleche {
+  position: absolute;
+  right: var(--esp-m);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent);
+  font-size: 1.1rem;
+  transition: transform .18s;
+}
+.vignette:hover .vignette__fleche { transform: translateY(-50%) translateX(4px); }
+
+
+/* ==========================================================================
+   11. SECTIONS
+   ========================================================================== */
+
+.section { padding: var(--esp-xl) 0; }
+
+.section__titre {
+  font-size: var(--t-titre);
+  margin-bottom: var(--esp-m);
+}
+
+.section__chapo {
+  max-width: 58ch;
+  color: var(--ardoise);
+  font-size: var(--t-petit);
+  margin-bottom: var(--esp-l);
+}
+
+.sous-titre {
+  font-size: var(--t-sous);
+  margin: var(--esp-xl) 0 var(--esp-m);
+}
+
+
+/* ==========================================================================
+   12. À PROPOS
+   ========================================================================== */
+
+.a-propos {
+  max-width: 62ch;
+  font-size: clamp(1.02rem, 2.6vw, 1.15rem);
+}
+
+
+/* ==========================================================================
+   13. COMPÉTENCES
+   ========================================================================== */
+
+.legende {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-xs);
+  margin-bottom: var(--esp-l);
+  padding: var(--esp-m);
+  background: var(--voile);
+  border-radius: var(--rayon);
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+.legende li { display: flex; align-items: baseline; gap: var(--esp-s); }
+.legende strong { color: var(--encre); }
+
+/* Le voyant d'état : un petit rond. La couleur ne porte JAMAIS l'information
+   toute seule — le nom de l'état est toujours écrit à côté. */
+.voyant {
+  flex: none;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  transform: translateY(-1px);
+}
+/* En service : rond plein. */
+.voyant--service {
+  background-color: var(--voyant-service);
+}
+
+/* En rodage : demi-rempli, avec son contour.
+   Attention à l'ordre : il faut background-color TRANSPARENT, sinon la
+   couleur de fond repasse par-dessus le dégradé et le rond paraît plein. */
+.voyant--rodage {
+  background-color: transparent;
+  background-image: linear-gradient(90deg, var(--voyant-rodage) 50%, transparent 50%);
+  box-shadow: inset 0 0 0 2px var(--voyant-rodage);
+}
+
+/* Repéré : contour seul, l'intérieur est vide. */
+.voyant--repere {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 2px var(--voyant-repere);
+}
+
+.domaines {
+  display: grid;
+  gap: var(--esp-m);
+}
+
+.domaine {
+  padding: var(--esp-m);
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+}
+
+.domaine__titre {
+  font-size: 1.05rem;
+  margin-bottom: var(--esp-m);
+  padding-bottom: var(--esp-s);
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--fil-1), var(--fil-2), var(--fil-3)) 1;
+  border-image-slice: 0 0 1 0;
+}
+
+.competence {
+  padding: var(--esp-s) 0;
+  border-bottom: 1px solid var(--trait);
+}
+.competence:last-child { border-bottom: none; padding-bottom: 0; }
+
+.competence__ligne {
+  display: flex;
+  align-items: baseline;
+  gap: var(--esp-s);
+  flex-wrap: wrap;
+}
+
+.competence__nom { font-weight: 700; }
+
+.competence__etat {
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  color: var(--ardoise);
+  white-space: nowrap;
+}
+
+/* Le "où je l'ai pratiquée" — c'est lui qui transforme une affirmation
+   en preuve. Il est volontairement bien visible. */
+.competence__ou {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+
+/* ==========================================================================
+   14. PROJETS
+   ========================================================================== */
+
+.projets {
+  display: grid;
+  gap: var(--esp-m);
+}
+
+/* Un projet seul dans une grille prevue pour trois paraitrait perdu dans un
+   coin. Tant qu'il n'y en a qu'un, il prend toute la rangee, borne a une
+   largeur de lecture confortable. Des qu'un deuxieme projet est ajoute dans
+   data.js, la regle cesse de s'appliquer d'elle-meme : rien a modifier. */
+.projets > li:only-child {
+  grid-column: 1 / -1;
+  max-width: 46rem;
+}
+
+/* État vide de la page Projets : tant qu'aucun projet n'est renseigné dans
+   data.js, on affiche ce bloc au lieu d'une page blanche. */
+.projets__vide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--esp-m);
+  max-width: 60ch;
+  padding: var(--esp-l) var(--esp-m);
+  background: var(--voile);
+  border-radius: var(--rayon);
+  border-left: 3px solid transparent;
+  border-image: linear-gradient(to bottom, var(--fil-1), var(--fil-2), var(--fil-3)) 1;
+  border-image-slice: 0 0 0 1;
+}
+
+.projets__vide p {
+  margin: 0;
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+/* La carte ENTIÈRE est un lien vers la page du projet.
+   Bien plus facile à viser au doigt sur un téléphone qu'un petit bouton
+   dans un coin — et une seule tabulation au clavier au lieu de deux. */
+.projet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-s);
+  height: 100%;
+  padding: var(--esp-m);
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+  color: var(--encre);
+  text-decoration: none;
+  transition: transform .18s, box-shadow .18s, border-color .18s;
+}
+.projet:hover,
+.projet:focus-visible {
+  color: var(--encre);
+  transform: translateY(-3px);
+  box-shadow: var(--ombre-haut);
+  border-color: var(--accent);
+}
+
+.projet__periode {
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  letter-spacing: 0.06em;
+  color: var(--ardoise);
+}
+
+.projet__titre { font-size: 1.15rem; }
+
+.projet__sous-titre {
+  display: block;
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+  margin: 0;
+}
+
+.projet__resume {
+  display: block;
+  font-size: var(--t-petit);
+  margin: 0;
+}
+
+.projet__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-xs);
+  margin-top: auto;
+  padding-top: var(--esp-s);
+}
+
+.tag {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--voile);
+  color: var(--ardoise);
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+}
+
+/* Le repère « documentation technique » sur la carte.
+   Le losange reprend celui du Fil : c'est la même famille de signes, et il
+   dit « il y a une pièce jointe » sans avoir besoin d'une icône importée. */
+.projet__doc {
+  display: flex;
+  align-items: baseline;
+  gap: var(--esp-xs);
+  margin-top: var(--esp-s);
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  color: var(--ardoise);
+}
+.projet__doc::before {
+  content: "\25C6";
+  color: var(--accent);
+  font-size: .7em;
+}
+
+/* L'appel à l'action, en bas de la carte. Ce n'est pas un vrai bouton :
+   c'est un texte, parce que la carte entière est déjà le lien. */
+.projet__appel {
+  margin-top: var(--esp-s);
+  color: var(--accent);
+  font-size: var(--t-petit);
+  font-weight: 700;
+}
+.projet__fleche { transition: transform .18s; display: inline-block; }
+.projet:hover .projet__fleche { transform: translateX(4px); }
+
+
+/* ==========================================================================
+   15. PAGE D'UN PROJET
+   --------------------------------------------------------------------------
+   Chaque projet a sa propre page : projet-share.html, projet-mairie.html…
+   Le contenu est lu dans data.js à partir de l'attribut data-projet.
+   ========================================================================== */
+
+.projet-page { max-width: 68rem; }
+
+/* Le recit et la fiche : une colonne sur telephone, deux au-dela. */
+.projet-corps { display: grid; gap: var(--esp-xl); }
+.projet-texte { min-width: 0; max-width: 62ch; }
+.projet-lateral { min-width: 0; display: grid; gap: var(--esp-m); align-content: start; }
+.projet-lateral .etape { margin-bottom: 0; padding: var(--esp-m); background: var(--panneau);
+  border: 1px solid var(--trait); border-radius: var(--rayon); }
+
+@media (min-width: 1000px) {
+  .projet-corps { grid-template-columns: minmax(0, 1fr) 21rem; column-gap: var(--esp-xl); align-items: start; }
+  /* La fiche suit la lecture. Sous l'en-tete fixe (environ 70 px). */
+  .projet-lateral { position: sticky; top: 5.5rem; }
+}
+
+/* L'illustration en tête de la page projet. Le schéma a un fond clair : on
+   l'encadre plutôt que de le laisser flotter sur le fond sombre du mode nuit. */
+.projet-figure { margin: 0 0 var(--esp-xl); }
+.projet-figure img {
+  display: block;
+  width: 100%;
+  max-width: 725px;
+  height: auto;
+  background: #FFFFFF;
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+}
+.projet-figure figcaption {
+  margin-top: var(--esp-xs);
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+/* Chaque étape du récit : contexte, problème, solution, outils… */
+.etape { margin-bottom: var(--esp-xl); }
+
+.etape__label {
+  display: inline-block;
+  margin: 0 0 var(--esp-s);
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-bottom: var(--esp-xs);
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--fil-1), var(--fil-2), var(--fil-3)) 1;
+  border-image-slice: 0 0 1 0;
+}
+
+.etape p { font-size: var(--t-texte); }
+
+.etape__outils { display: flex; flex-wrap: wrap; gap: var(--esp-xs); }
+
+/* Les compétences du référentiel mobilisées : un losange devant chaque ligne,
+   le même que sur le Fil. */
+.referentiel { display: grid; gap: var(--esp-xs); }
+.referentiel li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: var(--t-texte);
+}
+.referentiel li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+
+/* Le bloc « La documentation ».
+   Encadré, parce que c'est la seule pièce qui permet de vérifier tout ce
+   que la page affirme : elle ne doit pas se lire comme un paragraphe
+   ordinaire. */
+.etape--document {
+  padding: var(--esp-m);
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--rayon);
+}
+.etape--document p { margin-top: 0; }
+
+/* Ce bouton porte un libelle long (« ... 100 pages, PDF, 3,1 Mo »). La regle
+   generale .bouton interdit le retour a la ligne, ce qui convient a une
+   rangee de boutons courts mais fait deborder celui-ci sur un telephone.
+   Ici, et seulement ici, on rend le retour a la ligne possible. */
+.etape--document .bouton + .bouton { margin-left: var(--esp-s); }
+.etape--document .bouton {
+  margin-top: var(--esp-s);
+  white-space: normal;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* --- Aller au projet précédent / suivant, sans repasser par la liste ------ */
+.projet-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-s);
+  align-items: stretch;
+  margin-top: var(--esp-xl);
+  padding-top: var(--esp-l);
+  border-top: 1px solid var(--trait);
+}
+
+.voisin {
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--esp-s) var(--esp-m);
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+  text-decoration: none;
+  color: var(--encre);
+  transition: border-color .18s, transform .18s;
+}
+.voisin:hover { color: var(--encre); border-color: var(--accent); transform: translateY(-2px); }
+
+.voisin__label {
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  letter-spacing: 0.06em;
+  color: var(--ardoise);
+}
+
+.voisin__titre { font-size: var(--t-petit); font-weight: 700; }
+
+.projet-navigation .bouton {
+  flex: 0 0 auto;
+  align-self: center;
+  justify-content: center;
+}
+
+/* Les résultats chiffrés : la partie que le jury lit en premier. */
+.resultats { display: flex; flex-direction: column; gap: var(--esp-s); }
+
+.resultat {
+  display: flex;
+  gap: var(--esp-s);
+  padding: var(--esp-s) var(--esp-m);
+  background: var(--voile);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--rayon-petit);
+  font-size: var(--t-petit);
+}
+.resultat::before {
+  content: "→";
+  flex: none;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+
+/* ==========================================================================
+   16. PARCOURS
+   ========================================================================== */
+
+.frise { display: flex; flex-direction: column; gap: var(--esp-l); }
+
+.etape-frise {
+  position: relative;
+  padding-left: var(--esp-l);
+}
+
+/* Chaque étape porte son propre petit noeud, en écho au Fil. */
+.etape-frise::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.5em;
+  width: 10px; height: 10px;
+  background: var(--accent);
+  transform: rotate(45deg);
+  border-radius: 2px;
+}
+.etape-frise::after {
+  content: "";
+  position: absolute;
+  left: 4px; top: 1.7em; bottom: calc(-1 * var(--esp-l));
+  width: 2px;
+  background: var(--trait);
+}
+.etape-frise:last-child::after { display: none; }
+
+.etape-frise__periode {
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  letter-spacing: 0.06em;
+  color: var(--ardoise);
+}
+
+.etape-frise__titre { font-size: 1.05rem; margin: 2px 0; }
+
+.etape-frise__lieu {
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+  margin: 0 0 var(--esp-xs);
+}
+
+.etape-frise__detail { font-size: var(--t-petit); margin: 0; }
+
+/* Renvoi vers une autre page, en fin de section. */
+.renvoi {
+  margin-top: var(--esp-xl);
+  padding: var(--esp-m);
+  background: var(--voile);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--rayon-petit);
+  font-size: var(--t-petit);
+}
+
+
+/* ==========================================================================
+   16 bis. CERTIFICATIONS ET BADGES
+   --------------------------------------------------------------------------
+   Objectif de cette page : qu'un visiteur puisse TOUT voir et TOUT vérifier
+   lui-même. Chaque certification montre son badge officiel quand il existe,
+   et un lien direct vers le certificat PDF.
+   ========================================================================== */
+
+/* Les compteurs en haut de page. */
+.compteurs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-s);
+  margin-bottom: var(--esp-xl);
+}
+
+.compteur {
+  flex: 1 1 130px;
+  padding: var(--esp-m);
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+  border-top: 3px solid transparent;
+  border-image: linear-gradient(90deg, var(--fil-1), var(--fil-2), var(--fil-3)) 1;
+  border-image-slice: 1 0 0 0;
+}
+
+.compteur__nombre {
+  display: block;
+  font-family: var(--police-titre);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.compteur__libelle {
+  display: block;
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+/* Le bloc de vérification par un tiers (Credly).
+   Placé juste sous les compteurs : c'est la première chose qu'un recruteur
+   méfiant cherche, autant la lui donner tout de suite. */
+.verification {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--esp-s);
+  margin-bottom: var(--esp-xl);
+  padding: var(--esp-m);
+  background: var(--voile);
+  border-radius: var(--rayon);
+  border-left: 3px solid var(--accent);
+}
+
+.verification__intro {
+  max-width: 60ch;
+  margin: 0;
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+.verification__boutons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-s);
+}
+
+/* Un groupe = une catégorie (certifications, badges, modules…). */
+.groupe { margin-bottom: var(--esp-xl); }
+
+.groupe__titre {
+  font-size: var(--t-sous);
+  margin-bottom: var(--esp-xs);
+  padding-bottom: var(--esp-s);
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--fil-1), var(--fil-2), var(--fil-3)) 1;
+  border-image-slice: 0 0 1 0;
+}
+
+.groupe__intro {
+  max-width: 62ch;
+  margin-bottom: var(--esp-m);
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+.certifs__liste { display: grid; gap: var(--esp-m); }
+
+.certif {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-s);
+  height: 100%;
+  padding: var(--esp-m);
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+  transition: border-color .18s;
+}
+.certif:hover { border-color: var(--accent); }
+
+.certif__visuel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 96px;
+}
+
+/* Le badge officiel : carré, taille fixe, jamais déformé. */
+.certif__badge {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+}
+
+/* L'image d'un certificat : format paysage, sur toute la largeur.
+   Un fond blanc lui est appliqué en mode nuit, sinon le document
+   scanné se fondrait dans l'arrière-plan sombre. */
+.certif__apercu {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon-petit);
+  background: #FFFFFF;
+}
+
+/* Aucun visuel disponible : un losange, en écho au Fil. */
+.certif__marque {
+  font-size: 1.6rem;
+  color: var(--accent);
+  opacity: .5;
+}
+
+.certif__texte { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+
+.certif__nom { font-size: 1rem; }
+
+.certif__organisme {
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  color: var(--ardoise);
+  margin: 0;
+}
+
+.certif__couvre {
+  margin: var(--esp-xs) 0 0;
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+/* Le lien vers la preuve. Il descend toujours en bas de la carte, pour que
+   toutes les cartes d'une même ligne l'alignent au même endroit. */
+.certif__preuve {
+  margin-top: auto;
+  padding-top: var(--esp-s);
+  font-size: var(--t-petit);
+  font-weight: 700;
+}
+.certif__preuve::after { content: " ↗"; }
+
+
+/* ==========================================================================
+   17. VEILLE
+   ========================================================================== */
+
+.veille { display: grid; gap: var(--esp-m); }
+
+.sujet {
+  padding: var(--esp-m);
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+  border-top: 3px solid transparent;
+  border-image: linear-gradient(90deg, var(--fil-1), var(--fil-2), var(--fil-3)) 1;
+  border-image-slice: 1 0 0 0;
+}
+
+.sujet__titre { font-size: 1.05rem; margin-bottom: var(--esp-s); }
+
+.sujet__label {
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ardoise);
+  display: block;
+  margin-bottom: var(--esp-xs);
+}
+
+.sujet__sources {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: var(--esp-m);
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+.sujet__retiens { font-size: var(--t-petit); }
+
+
+/* ==========================================================================
+   18. CONTACT
+   ========================================================================== */
+
+/* Le titre de chaque bloc ne décolle pas du haut de sa colonne : sans ça, le
+   formulaire descendrait plus bas que les coordonnées. */
+.contact-bloc > .sous-titre:first-child { margin-top: 0; }
+
+/* --- LA GRILLE DE LA PAGE CONTACT ------------------------------------------
+   Trois blocs, dans l'ordre de lecture : me joindre directement, m'écrire,
+   mes profils.
+   Sur téléphone : une seule colonne, dans cet ordre.
+   Sur grand écran (voir section 21) : coordonnées et profils à gauche,
+   formulaire à droite sur toute la hauteur.
+   L'ordre du HTML ne change jamais : c'est celui du clavier et des lecteurs
+   d'écran. */
+.contact-grille {
+  display: grid;
+  gap: var(--esp-xl);
+  margin-bottom: var(--esp-xl);
+}
+
+/* --- ME JOINDRE DIRECTEMENT : une carte, une ligne par moyen de contact ----
+   L'e-mail est ce qu'un recruteur pressé cherche : il est donc en gros, avec
+   son bouton « Copier ». */
+.direct {
+  margin-bottom: var(--esp-s);
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+  /* Un liseré au dégradé du Fil sur le bord haut, comme les compteurs. */
+  border-top: 3px solid transparent;
+  border-image: linear-gradient(90deg, var(--fil-1), var(--fil-2), var(--fil-3)) 1;
+  border-image-slice: 1 0 0 0;
+}
+
+.direct__ligne {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-s);
+  padding: var(--esp-s) var(--esp-m);
+}
+.direct__ligne + .direct__ligne { border-top: 1px solid var(--trait); }
+
+.direct__icone { width: 22px; height: 22px; flex: none; color: var(--accent); }
+
+/* min-width: 0 : sans lui, une longue adresse e-mail empêcherait la colonne de
+   rétrécir et ferait déborder la carte sur un petit écran. */
+.direct__texte {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.direct__quoi {
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ardoise);
+}
+
+/* L'adresse : grosse, lisible à distance, et sécable. 44 px de haut au
+   minimum : c'est la zone qu'on touche du pouce. */
+.direct__valeur {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--police-titre);
+  font-size: clamp(1.1rem, 4.6vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--encre);
+  text-decoration: none;
+  /* overflow-wrap: anywhere et non word-break : une adresse e-mail est une
+     longue chaîne sans espace. */
+  overflow-wrap: anywhere;
+}
+a.direct__valeur:hover,
+a.direct__valeur:focus-visible {
+  color: var(--encre);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
+/* Le bouton « Copier » : sobre, mais assez grand pour le pouce. */
+.copier {
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--esp-s);
+  background: transparent;
+  border: 1px solid var(--trait-fort);
+  border-radius: 999px;
+  color: var(--encre);
+  font-family: inherit;
+  font-size: var(--t-petit);
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color .18s, background-color .18s, color .18s;
+}
+.copier:hover { border-color: var(--accent); background: var(--voile); }
+.copier--fait { border-color: var(--accent); color: var(--accent); }
+
+/* La confirmation de copie. Sa hauteur est réservée : le bouton CV en dessous
+   ne saute pas quand le message apparaît ou disparaît. */
+.direct__etat {
+  min-height: 1.5em;
+  margin: 0 0 var(--esp-s);
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+.cv-bloc { margin: 0; }
+.cv-bloc:empty { display: none; }
+
+/* Le libellé de ce bouton est long (« Télécharger mon CV (PDF, 30 Ko) »). La
+   règle générale .bouton interdit le retour à la ligne : avec la police du
+   site, plus large que celle du système, il dépassait de l'écran à 320 px.
+   Ici, et seulement ici, le retour à la ligne est permis. */
+.cv-bloc .bouton {
+  white-space: normal;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* Un bloc de la grille ne doit jamais être forcé à s'élargir par son contenu :
+   sans min-width: 0, un élément trop large étirait toute la colonne. */
+.contact-bloc { min-width: 0; }
+
+/* --- MES PROFILS : une carte, une ligne par profil -------------------------
+   Avant : quatre grandes cartes empilées, qui rendaient la colonne bien plus
+   haute que le formulaire. Maintenant : des lignes dans une seule carte. */
+.contact {
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+  /* Les coins des lignes suivent l'arrondi de la carte. */
+  overflow: hidden;
+}
+.contact li + li { border-top: 1px solid var(--trait); }
+
+.contact a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-s);
+  min-height: 56px;
+  padding: var(--esp-s) var(--esp-m);
+  text-decoration: none;
+  color: var(--encre);
+  transition: background-color .18s;
+}
+.contact a:hover { background: var(--voile); }
+
+/* La flèche ↗ signale un lien qui quitte le site. La syntaxe « / "" » lui
+   donne un texte alternatif vide : un lecteur d'écran ne la lit pas (le
+   libellé du lien dit déjà « s'ouvre dans un nouvel onglet »). */
+.contact a::after {
+  content: "\2197";
+  content: "\2197" / "";
+  flex: none;
+  color: var(--accent);
+}
+
+.contact__quoi {
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ardoise);
+  display: block;
+}
+
+.contact__valeur { font-weight: 700; word-break: break-word; }
+
+.contact__note {
+  max-width: 50ch;
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+
+/* --- LE FORMULAIRE --------------------------------------------------------
+   Il n'envoie rien : il prépare le message dans le logiciel de courrier du
+   visiteur. Voir preparerFormulaire() dans app.js.
+   -------------------------------------------------------------------------- */
+
+.formulaire {
+  max-width: 42rem;
+  margin-bottom: var(--esp-l);
+  padding: var(--esp-m);
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+  border-left: 3px solid transparent;
+  border-image: linear-gradient(to bottom, var(--fil-1), var(--fil-2), var(--fil-3)) 1;
+  border-image-slice: 0 0 0 1;
+}
+
+.formulaire__intro {
+  max-width: 52ch;
+  margin-bottom: var(--esp-l);
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-xs);
+  margin-bottom: var(--esp-m);
+}
+
+.champ label {
+  font-weight: 700;
+  font-size: var(--t-petit);
+}
+
+.champ__facultatif {
+  font-weight: 400;
+  color: var(--ardoise);
+}
+
+/* L'aide passe SOUS le champ : au-dessus, elle serait lue avant l'intitulé
+   par certains lecteurs d'écran, ce qui embrouille. */
+.champ__aide {
+  font-size: var(--t-mini);
+  color: var(--ardoise);
+}
+
+.champ input,
+.champ textarea {
+  width: 100%;
+  /* 0.72rem donne une hauteur de champ de 46 px : au-dessus des 44 px
+     recommandés pour qu'une cible soit confortable au doigt. */
+  padding: 0.72rem 0.8rem;
+  background: var(--brume);
+  color: var(--encre);
+  border: 1px solid var(--trait-fort);
+  border-radius: var(--rayon-petit);
+  font-family: inherit;
+  font-size: var(--t-texte);
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.champ textarea {
+  /* vertical seulement : en horizontal, l'utilisateur pourrait élargir le
+     champ au-delà de la page et créer un défilement latéral. */
+  resize: vertical;
+  min-height: 8rem;
+  line-height: 1.55;
+}
+
+.champ input:hover,
+.champ textarea:hover { border-color: var(--ardoise); }
+
+.champ input:focus-visible,
+.champ textarea:focus-visible {
+  border-color: var(--accent);
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* Le rouge n'apparaît qu'APRÈS une tentative d'envoi : signaler une erreur
+   sur un champ que le visiteur n'a pas encore rempli serait agressif. */
+.formulaire:invalid .champ input:invalid,
+.formulaire:invalid .champ textarea:invalid { border-color: var(--trait-fort); }
+
+.formulaire .champ input:user-invalid,
+.formulaire .champ textarea:user-invalid {
+  border-color: var(--alerte);
+  border-width: 2px;
+}
+
+/* Le message affiché après le clic. Il est annoncé par les lecteurs d'écran
+   grâce au role="status" posé dans le HTML. */
+.formulaire__etat {
+  margin: var(--esp-m) 0 0;
+  font-size: var(--t-petit);
+}
+.formulaire__etat:empty { display: none; }
+
+/* Les actions proposées après l'envoi : Gmail (si le navigateur l'a bloqué),
+   la messagerie du visiteur, la copie du texte. Elles passent à la ligne sur
+   un petit écran. */
+.formulaire__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-s);
+  margin-top: var(--esp-s);
+}
+
+/* « .copier » est le style d'un bouton sobre ; ici il sert aussi à un lien. */
+a.copier {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+a.copier:hover { color: var(--encre); }
+
+.formulaire__etat--ok {
+  padding: var(--esp-s) var(--esp-m);
+  background: var(--voile);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--rayon-petit);
+  color: var(--encre);
+}
+
+
+/* ==========================================================================
+   19. PIED DE PAGE
+   ========================================================================== */
+
+.pied {
+  margin-top: var(--esp-xl);
+  border-top: 1px solid var(--trait);
+  background: var(--panneau);
+}
+
+.pied__interieur {
+  max-width: var(--largeur-max);
+  margin: 0 auto;
+  padding: var(--esp-l) var(--esp-m);
+  font-size: var(--t-petit);
+  color: var(--ardoise);
+}
+
+.pied p { margin-bottom: var(--esp-xs); }
+.pied__tech { margin-top: var(--esp-m); font-size: var(--t-mini); }
+
+/* Le plan du site : toutes les pages rappelées en bas, pour qu'on ne soit
+   jamais coincé après avoir fini de lire. */
+.pied__plan { margin: var(--esp-m) 0; }
+
+.pied__liste {
+  display: flex;
+  flex-wrap: wrap;
+  /* Pas d'espace entre les lignes : c'est le lien lui-même qui fait 44 px de
+     haut, l'espace est donc déjà cliquable. */
+  gap: 0 var(--esp-m);
+}
+
+.pied__liste a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ardoise);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.pied__liste a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+
+/* ==========================================================================
+   20. RAPPELS TODO
+   --------------------------------------------------------------------------
+   Tout texte commençant par "TODO:" dans data.js s'affiche comme ceci.
+   Impossible de publier le site en oubliant un trou.
+   ========================================================================== */
+
+.todo {
+  display: block;
+  padding: var(--esp-s) var(--esp-m);
+  background: var(--alerte-fond);
+  border-left: 3px solid var(--alerte);
+  border-radius: var(--rayon-petit);
+  color: var(--alerte);
+  font-size: var(--t-petit);
+  font-weight: 700;
+}
+.todo::before { content: "À COMPLÉTER — "; font-family: var(--police-donnees); font-size: 0.85em; }
+
+
+/* ==========================================================================
+   21. GRANDS ÉCRANS
+   --------------------------------------------------------------------------
+   Le site est conçu d'abord pour le téléphone. Ces règles ne font
+   qu'ajouter de l'aisance quand l'écran s'élargit.
+   ========================================================================== */
+
+/* --- À partir de 640 px : deux colonnes pour les cartes ------------------- */
+@media (min-width: 640px) {
+  :root { --fil-x: 20px; --page-pad: 52px; }
+
+  .legende { flex-direction: row; flex-wrap: wrap; gap: var(--esp-m); }
+  .direct   { grid-template-columns: repeat(2, 1fr); }
+  .contact  { flex-direction: row; flex-wrap: wrap; }
+  /* Les repères passent en deux colonnes terme / valeur, alignées. */
+  .reperes  { grid-template-columns: max-content 1fr; align-items: baseline; }
+  .reperes__valeur { margin-bottom: 0; }
+  .sommaire { grid-template-columns: repeat(2, 1fr); }
+  .domaines { grid-template-columns: repeat(2, 1fr); }
+  .projets  { grid-template-columns: repeat(2, 1fr); }
+  .certifs__liste { grid-template-columns: repeat(2, 1fr); }
+  .veille   { grid-template-columns: repeat(2, 1fr); }
+  .contact  { flex-direction: row; flex-wrap: wrap; }
+  .contact li { flex: 1 1 240px; }
+
+  .pied__interieur { display: flex; flex-wrap: wrap; gap: var(--esp-m); align-items: baseline; }
+  .pied__tech { flex-basis: 100%; margin-top: 0; }
+}
+
+/* --- À partir de 900 px : le menu se déplie, le burger disparaît ---------- */
+@media (min-width: 900px) {
+  :root { --fil-x: 34px; --page-pad: 88px; }
+
+  .burger { display: none; }
+
+  .nav {
+    position: static;
+    display: flex !important;   /* toujours visible : le burger n'existe plus */
+    align-items: center;
+    gap: var(--esp-l);
+    padding: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  .nav__liste { flex-direction: row; gap: var(--esp-m); }
+
+  .nav__liste a {
+    position: relative;
+    padding: var(--esp-xs) 0;
+    border-bottom: none;
+    font-size: var(--t-petit);
+  }
+
+  /* Le trait sous l'entrée active reprend le dégradé du Fil. */
+  .nav__liste a[aria-current]::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--fil-1), var(--fil-2), var(--fil-3));
+  }
+
+  .theme { margin-top: 0; }
+
+  /* --- LE HERO PASSE EN DEUX COLONNES -------------------------------------
+     À partir d'ici l'écran est assez large pour que le texte et le portrait
+     tiennent côte à côte. Le portrait occupe l'espace qui restait vide à
+     droite, et le sommaire repasse sous les deux colonnes. */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--esp-xl);
+    align-items: start;
+    max-width: none;   /* annule la largeur de lecture du mode une colonne */
+  }
+
+  /* Tout le texte va en colonne 1, en gardant une largeur de lecture. */
+  .hero > *  { grid-column: 1; max-width: 46ch; }
+  .hero__nom { max-width: none; }
+
+  /* Le portrait : colonne 2, rond, aligné en haut sur le nom.
+     align-self: start le remonte au niveau du titre au lieu de le laisser
+     flotter au milieu du bloc de texte. */
+  .hero__cadre {
+    grid-column: 2;
+    grid-row: 1 / span 6;
+    align-self: start;
+    /* Le haut du cercle descend au niveau du nom, et non plus de la ligne
+       « BTS SIO » : collé tout en haut, l'arrondi manquait d'air et semblait
+       coupé par la barre de navigation quand on arrive sur la page. */
+    margin-top: 3.3rem;
+    width: 300px;
+    height: 300px;
+    max-width: none;
+    aspect-ratio: 1;
+    padding: 4px;
+    border-radius: 50%;
+  }
+
+  /* Le sommaire reprend toute la largeur, sous les deux colonnes. */
+  .sommaire { grid-column: 1 / -1; max-width: none; }
+  .chiffres { grid-column: 1 / -1; max-width: none; }
+
+  /* --- LA PAGE CONTACT PASSE EN DEUX COLONNES ---------------------------
+     Coordonnées et profils à gauche, formulaire à droite sur toute la hauteur.
+     align-items: start colle chaque bloc en haut de sa case.
+     grid-template-rows: auto 1fr : si le formulaire est plus haut que les deux
+     blocs de gauche, l'espace en plus va à la dernière ligne (invisible) et
+     non entre les coordonnées et les profils. */
+  .contact-grille {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    column-gap: var(--esp-xl);
+  }
+  .contact-bloc--direct     { grid-column: 1; grid-row: 1; }
+  .contact-bloc--profils    { grid-column: 1; grid-row: 2; }
+  .contact-bloc--formulaire { grid-column: 2; grid-row: 1 / span 2; }
+
+  /* Le formulaire occupe toute sa colonne. */
+  .contact-grille .formulaire { max-width: none; }
+
+  /* Colonne étroite : on descend d'un cran la taille de l'adresse e-mail pour
+     qu'elle tienne sur une ligne autant que possible. */
+  .contact-grille .direct__valeur { font-size: clamp(1rem, 1.7vw, 1.3rem); }
+
+  .sommaire { grid-template-columns: repeat(3, 1fr); }
+  .domaines { grid-template-columns: repeat(3, 1fr); }
+  .projets  { grid-template-columns: repeat(3, 1fr); }
+  .veille   { grid-template-columns: repeat(3, 1fr); }
+  .certifs__liste { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* --- ÉCRANS PEU HAUTS ------------------------------------------------------
+   Beaucoup d'ordinateurs portables n'offrent que 600 à 700 px de hauteur
+   utile une fois la barre du navigateur déduite. Sur ces écrans, la marge
+   haute du hero mange la place et repousse les boutons sous la ligne de
+   flottaison. On la réduit, sans toucher aux écrans normaux. */
+@media (min-width: 900px) and (max-height: 780px) {
+  .hero { padding-top: var(--esp-l); }
+}
+
+
+/* --- À partir de 1200 px : on laisse respirer, sans étirer le texte ------- */
+@media (min-width: 1200px) {
+  .hero > *  { max-width: 52ch; }
+  .hero__nom { max-width: none; }
+  .sommaire  { max-width: none; }
+  .hero__cadre { width: 340px; height: 340px; max-width: none; }
+}
+
+
+/* ==========================================================================
+   21 bis. TRANSITION ENTRE LES PAGES
+   --------------------------------------------------------------------------
+   Le site a de vraies pages : chaque lien recharge le document. Sans rien,
+   l'écran clignote en blanc entre deux pages.
+
+   On utilise l'API "View Transitions" du navigateur : il photographie
+   l'ancienne page et la nouvelle, puis fabrique lui-même le fondu. Tout se
+   fait en CSS, sans une ligne de JavaScript.
+
+   POURQUOI PAS UN FONDU FAIT À LA MAIN EN JAVASCRIPT ?
+   Parce qu'il faudrait retarder chaque clic pour laisser le temps à
+   l'animation, et qu'au moindre pépin le visiteur resterait sur une page
+   vide. Ici, si le navigateur ne connaît pas cette API, il ne se passe
+   simplement rien de spécial : la navigation reste instantanée.
+   ========================================================================== */
+
+/* Active la transition sur toutes les navigations internes au site. */
+@view-transition { navigation: auto; }
+
+
+/* ⚠️ LA CAUSE DE L'ÉCLAIR BLANC — NE PAS SUPPRIMER CES DEUX RÈGLES
+   --------------------------------------------------------------------------
+   Par défaut, le navigateur empile l'ancienne et la nouvelle page dans un
+   calque isolé et les mélange en mode « plus-lighter » : là où elles se
+   recouvrent, les couleurs S'ADDITIONNENT au lieu de se recouvrir. Sur un
+   fond sombre, le milieu de la transition devient donc franchement plus
+   clair — c'est exactement le bref flash blanc qu'on voit en changeant de
+   page.
+
+   isolation: auto et mix-blend-mode: normal rétablissent un fondu ordinaire.
+   Tant qu'elles sont là, on peut animer l'opacité de 0 à 1 sans risque. */
+::view-transition-image-pair(root),
+::view-transition-image-pair(entete),
+::view-transition-image-pair(contenu) {
+  isolation: auto;
+}
+
+::view-transition-old(root),    ::view-transition-new(root),
+::view-transition-old(entete),  ::view-transition-new(entete),
+::view-transition-old(contenu), ::view-transition-new(contenu) {
+  mix-blend-mode: normal;
+}
+
+
+/* En nommant un élément, on lui dit : « tu es le même d'une page à l'autre ». */
+.entete { view-transition-name: entete; }
+main    { view-transition-name: contenu; }
+
+
+/* LE FOND ET L'EN-TÊTE NE SE FONDENT PAS : ILS BASCULENT D'UN COUP.
+   Le « root » porte l'arrière-plan de la page. Le faire traverser un fondu,
+   c'est afficher pendant 300 ms un arrière-plan à demi transparent — encore
+   une occasion de laisser passer du blanc. L'en-tête, lui, est identique
+   d'une page à l'autre : le voir clignoter donnerait l'impression d'un
+   rechargement, alors qu'on cherche l'effet inverse. */
+::view-transition-old(root),
+::view-transition-old(entete) { animation: none; opacity: 0; }
+
+::view-transition-new(root),
+::view-transition-new(entete) { animation: none; opacity: 1; }
+
+
+/* SEUL LE CONTENU EST ANIMÉ.
+   L'ancien s'efface en reculant légèrement, comme s'il passait derrière ;
+   le nouveau monte depuis le bas avec une décélération franche, de sorte que
+   le regard accompagne le mouvement au lieu de le subir. */
+::view-transition-old(contenu) {
+  animation: page-sortie 220ms cubic-bezier(.4, 0, 1, 1) both;
+}
+
+::view-transition-new(contenu) {
+  animation: page-entree 520ms cubic-bezier(.16, 1, .3, 1) 80ms both;
+}
+
+@keyframes page-sortie {
+  to {
+    opacity: 0;
+    transform: translateY(-18px) scale(.98);
+  }
+}
+
+@keyframes page-entree {
+  from {
+    opacity: 0;
+    transform: translateY(34px) scale(.98);
+  }
+}
+
+
+/* --- NAVIGATEURS SANS TRANSITIONS ENTRE PAGES (Firefox) -------------------
+   ATTENTION, PIEGE : on testait avant  @supports not (view-transition-name)
+   Ca ne marchait pas. Firefox SUPPORTE cette propriete — c'est uniquement
+   les transitions d'une page a l'autre qu'il ne sait pas encore faire. Le
+   test renvoyait donc "supporte", le repli ne se declenchait jamais, et
+   Firefox n'affichait AUCUNE animation.
+
+   La classe .sans-transition-de-page est posee par le petit script en haut
+   de chaque page, qui teste l'evenement "pagereveal" — present uniquement
+   dans les navigateurs sachant faire ces transitions.
+
+   Ce qu'on peut faire ici est plus limite : le navigateur detruit l'ancienne
+   page avant qu'on puisse l'animer. Seule l'ARRIVEE est animable. */
+@media (prefers-reduced-motion: no-preference) {
+  .sans-transition-de-page main {
+    animation: page-arrivee 460ms cubic-bezier(.16, 1, .3, 1) both;
+  }
+
+  /* L'en-tete arrive juste avant le contenu, en fondu seul : il donne le
+     depart du mouvement sans se deplacer. */
+  .sans-transition-de-page .entete {
+    animation: entete-arrivee 260ms ease-out both;
+  }
+}
+
+@keyframes page-arrivee {
+  from {
+    opacity: 0;
+    transform: translateY(34px) scale(.98);
+  }
+}
+
+@keyframes entete-arrivee {
+  from { opacity: 0; }
+}
+
+
+/* ==========================================================================
+   21 ter. APPARITION AU DÉFILEMENT ET BOUTON ENFONCÉ
+   --------------------------------------------------------------------------
+   La classe a-reveler est posée par le JavaScript (preparerApparitions), pas
+   par le HTML : sans JavaScript, rien n'est jamais masqué.
+
+   On anime avec @keyframes et le remplissage « backwards », et non avec une
+   transition : une fois terminée, l'animation ne laisse AUCUNE trace, donc
+   l'effet de survol des cartes (qui, lui, déplace la carte) continue de
+   fonctionner. Une transition l'aurait écrasé.
+   ========================================================================== */
+
+.a-reveler:not(.est-visible) { opacity: 0; }
+
+.a-reveler.est-visible {
+  animation: apparition .5s ease-out var(--retard, 0ms) backwards;
+}
+
+/* L'apparition imite une liaison qui s'établit : le bloc « accroche » (deux
+   scintillements, comme un voyant qui cherche le signal), puis un anneau
+   lumineux passe de l'état « down » à « up » et s'éteint. */
+@keyframes apparition {
+  0%   { opacity: 0; transform: translateY(10px); box-shadow: 0 0 0 0 transparent; }
+  18%  { opacity: .55; }
+  26%  { opacity: .1; }
+  40%  { opacity: 1; box-shadow: 0 0 0 2px var(--accent); }
+  100% { opacity: 1; transform: none; box-shadow: 0 0 0 0 transparent; }
+}
+
+/* Le bouton s'enfonce quand on appuie : le clic est pris en compte, on le
+   sent. Placé APRÈS toutes les règles :hover, sinon celles-ci l'emporteraient
+   (même poids, la dernière écrite gagne). */
+.bouton:active {
+  transform: translateY(1px) scale(.98);
+  box-shadow: none;
+}
+
+
+/* ==========================================================================
+   21 quater. RÉSEAU ANIMÉ ET TERMINAL (accueil)
+   ========================================================================== */
+
+/* Le canvas couvre tout l'accueil, derrière le texte. isolation: isolate lui
+   donne son propre empilement : z-index: -1 reste DANS l'accueil et ne passe
+   pas derrière le fond de la page. Un fondu à gauche garde le texte net. */
+.hero { position: relative; isolation: isolate; }
+
+.hero__reseau {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, .2), #000 65%);
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, .2), #000 65%);
+}
+
+@media (min-width: 900px) {
+  /* « auto » : sans placement dans la grille, le canvas prend toute la boîte de
+     l'accueil. Avec « .hero > * », il serait cantonné à la première colonne. */
+  .hero > .hero__reseau { grid-column: auto; grid-row: auto; max-width: none; }
+  .hero > .terminal { grid-column: 1 / -1; max-width: 46rem; }
+}
+
+/* Le terminal reste sombre dans les deux thèmes, comme un vrai terminal. */
+.terminal {
+  margin-top: var(--esp-l);
+  background: #0A1A22;
+  border: 1px solid #1F3D4A;
+  border-radius: var(--rayon);
+  overflow: hidden;
+  font-family: var(--police-donnees);
+  font-size: var(--t-petit);
+  color: #EAF2F4;
+}
+
+.terminal__barre {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #122A35;
+  border-bottom: 1px solid #1F3D4A;
+}
+.terminal__point { width: 9px; height: 9px; border-radius: 50%; background: #3FD0C4; opacity: .85; }
+.terminal__point:nth-child(2) { background: #8C8AF0; }
+.terminal__point:nth-child(3) { background: #F2B441; }
+.terminal__titre { margin-left: auto; font-size: var(--t-mini); color: #9DB3BC; }
+
+/* Hauteur réservée à trois entrées : le terminal ne fait pas sauter la page. */
+.terminal__corps { padding: 12px 14px; min-height: 11.5rem; }
+.terminal__entree { margin-bottom: 10px; }
+.terminal__invite { color: #3FD0C4; margin-right: .6em; }
+.terminal__sortie { color: #EAF2F4; padding-left: 1.9em; }
+.terminal__source { color: #9DB3BC; font-size: var(--t-mini); padding-left: 1.9em; }
+
+.terminal__curseur {
+  display: inline-block;
+  width: .6em;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: #3FD0C4;
+  animation: clignote 1s steps(1) infinite;
+}
+@keyframes clignote { 50% { opacity: 0; } }
+
+@media print { .hero__reseau, .terminal { display: none !important; } }
+
+
+/* ==========================================================================
+   21 quinquies. L'AMBIANCE « SALLE DE SUPERVISION »
+   --------------------------------------------------------------------------
+   Quatre touches, toutes décoratives et toutes coupées si la personne a
+   demandé de réduire les animations :
+     - un quadrillage très discret en fond, comme un écran de monitoring ;
+     - un curseur de terminal qui clignote après chaque titre de page ;
+     - un balayage lumineux au survol des cartes, comme un scan ;
+     - un paquet lumineux qui descend le long du Fil.
+   ========================================================================== */
+
+body {
+  background-image:
+    linear-gradient(var(--grille) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grille) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Curseur de terminal après le titre. Le trait bas est décoratif. */
+.section__titre::after {
+  content: "_";
+  margin-left: .08em;
+  color: var(--accent);
+  animation: clignote 1.1s steps(1) infinite;
+}
+
+/* Balayage au survol : une ligne lumineuse traverse la carte de haut en bas. */
+.vignette, .projet { position: relative; overflow: hidden; }
+.vignette::after,
+.projet::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -30%;
+  height: 30%;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--accent) 22%, transparent), transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+.vignette:hover::after,
+.vignette:focus-visible::after,
+.projet:hover::after,
+.projet:focus-visible::after {
+  animation: balayage .9s ease-out;
+}
+@keyframes balayage {
+  0%   { top: -30%; opacity: 1; }
+  100% { top: 100%; opacity: 1; }
+}
+
+/* Un paquet lumineux descend le Fil, toutes les quelques secondes. */
+.fil::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 0;
+  width: 6px;
+  height: 22px;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, transparent, var(--accent));
+  opacity: 0;
+  animation: paquet-fil 7s ease-in infinite;
+}
+@keyframes paquet-fil {
+  0%   { top: 0;    opacity: 0; }
+  8%   { opacity: .9; }
+  60%  { top: 100%; opacity: 0; }
+  100% { top: 100%; opacity: 0; }
+}
+
+@media print { body { background-image: none; } }
+
+
+/* ==========================================================================
+   21 sexies. RETOURS « CONSOLE » DU FORMULAIRE
+   ========================================================================== */
+
+/* Retours de console du formulaire : l'état est écrit [OK] / [ATTENTION],
+   la couleur ne fait que le souligner. */
+.console { margin-bottom: var(--esp-s); font-family: var(--police-donnees); font-size: var(--t-petit); }
+.console__invite { color: var(--accent); }
+.console__etat { font-weight: 700; }
+.console__etat--ok { color: var(--ok); }
+.console__etat--warn { color: var(--fil-3); }
+
+
+/* ==========================================================================
+   22. ANIMATIONS RÉDUITES ET IMPRESSION
+   ========================================================================== */
+
+/* Certaines personnes ressentent un malaise avec les animations et l'ont
+   indiqué dans les réglages de leur système. On les respecte : Le Fil
+   s'affiche allumé d'un coup, plus rien ne bouge. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+
+  .projet:hover, .contact a:hover, .bouton:hover { transform: none; }
+
+  /* Les transitions de page ont leurs propres pseudo-éléments : la règle
+     universelle * ci-dessus ne les atteint pas, il faut les viser à part.
+     Sans ça, quelqu'un qui a désactivé les animations dans son système
+     verrait quand même les pages glisser. */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Impression : on enlève tout ce qui ne sert à rien sur papier. */
+@media print {
+  .entete, .fil, .theme, .evitement, .projet__appel, .projet-navigation,
+  .pied__plan { display: none !important; }
+  /* Un bloc pas encore « atteint » resterait invisible sur le papier. */
+  .a-reveler { opacity: 1 !important; }
+  body { background: #FFFFFF; color: #000000; }
+  .page { padding-left: 0; }
+  .section { padding: 1rem 0; page-break-inside: avoid; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.8em; }
+}

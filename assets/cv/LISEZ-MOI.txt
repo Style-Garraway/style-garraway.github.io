@@ -1,0 +1,66 @@
+TON CV — comment l'ajouter au site
+================================================================================
+
+POURQUOI LE BOUTON "TELECHARGER MON CV" N'APPARAIT PAS
+--------------------------------------------------------------------------------
+
+C'est volontaire. Tant qu'aucun fichier n'est indique, le bouton n'est pas
+cree du tout.
+
+Mieux vaut pas de bouton qu'un bouton qui mene a une erreur 404 sous les yeux
+d'un recruteur. Le jour ou tu deposes ton CV, le bouton apparait tout seul.
+
+
+LES DEUX ETAPES
+--------------------------------------------------------------------------------
+
+ETAPE 1 : depose ton CV en PDF dans CE dossier (assets/cv/).
+
+  Nomme-le sans accent, sans espace, sans majuscule bizarre. Par exemple :
+
+      CV-Style-Garraway.pdf
+
+  Un nom avec des espaces ou des accents peut casser le lien selon
+  l'hebergeur. C'est le genre de detail qui ne se voit qu'une fois en ligne.
+
+ETAPE 2 : ouvre assets/js/data.js et trouve la ligne cvFichier (vers la ligne 73).
+
+  Remplace :
+      cvFichier: ""
+
+  Par :
+      cvFichier: "assets/cv/CV-Style-Garraway.pdf"
+
+  Enregistre, rafraichis la page. Le bouton est la.
+
+
+CONSEILS SUR LE FICHIER LUI-MEME
+--------------------------------------------------------------------------------
+
+Format         PDF uniquement. Jamais .docx : la mise en page bouge d'un poste
+               a l'autre, et tous les recruteurs n'ont pas Word.
+
+Poids          Vise moins de 1 Mo. Si ton PDF est plus lourd, c'est qu'il
+               contient des images en pleine resolution. Un PDF de CV a
+               2 Mo met du temps a s'ouvrir sur un telephone en 4G.
+
+Nom du fichier Un recruteur telecharge 40 CV par jour. "CV.pdf" se perd dans
+               son dossier de telechargements. "CV-Style-Garraway.pdf" non.
+
+Contenu        Le CV et le site doivent raconter la MEME chose. Si le site dit
+               "4 certifications Cisco" et le CV "15 certifications", tu perds
+               ta credibilite sur les deux.
+
+Mise a jour    Quand tu remplaces le CV, garde exactement le meme nom de
+               fichier : tu n'auras pas a retoucher data.js.
+
+
+ATTENTION A CE QUE TON CV CONTIENT
+--------------------------------------------------------------------------------
+
+Le site ne publie volontairement ni adresse postale ni numero de telephone.
+Mais si ton PDF les contient, ils deviennent publics des que le CV est en ligne,
+et les moteurs de recherche peuvent indexer le contenu d'un PDF.
+
+Reflechis-y avant de deposer le fichier. Une adresse e-mail et un lien LinkedIn
+suffisent a un recruteur pour te joindre.

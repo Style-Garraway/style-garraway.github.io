@@ -1,0 +1,59 @@
+POLICES DU SITE
+================================================================================
+
+Les quatre fichiers sont en place et le site les utilise.
+
+  archivo-variable.woff2         Archivo                      les titres
+  atkinson-regular.woff2         Atkinson Hyperlegible 400    le texte courant
+  atkinson-bold.woff2            Atkinson Hyperlegible 700    le texte en gras
+  jetbrains-mono-regular.woff2   JetBrains Mono               les donnees techniques
+
+Poids total : environ 89 Ko, charges une seule fois puis gardes en cache.
+Aucune requete vers un domaine externe : les fichiers sont ICI, en local.
+
+
+D'OU ILS VIENNENT
+--------------------------------------------------------------------------------
+
+Paquets npm @fontsource-variable/archivo, @fontsource/atkinson-hyperlegible et
+@fontsource/jetbrains-mono, telecharges le 30 septembre 2026 depuis le depot
+public cdn.jsdelivr.net/npm. Ils ne servent qu'a recuperer les fichiers : le
+site, lui, ne contacte jamais ce serveur.
+
+Sous-ensemble « latin » uniquement : lettres accentuees du francais, « oe » et
+ponctuation typographique (tirets, guillemets). Un caractere absent, comme une
+fleche ou un losange, s'affiche avec la police du systeme, sans erreur.
+
+
+LICENCE
+--------------------------------------------------------------------------------
+
+Les trois polices sont sous SIL Open Font License 1.1. Elle autorise de les
+heberger sur ton site, A CONDITION de garder leurs mentions de copyright et le
+texte de la licence. C'est le role du fichier LICENCES.txt, dans ce dossier :
+ne le supprime pas.
+
+Ne mets JAMAIS un lien vers fonts.googleapis.com dans le CSS : ce serait une
+requete vers un domaine externe, et ton site n'en fait aucune.
+
+
+POURQUOI CES TROIS POLICES-LA
+--------------------------------------------------------------------------------
+
+Archivo               Une grotesque industrielle, un peu large. Elle a l'esprit
+                      d'une etiquette de baie ou d'un panneau de signalisation.
+
+Atkinson Hyperlegible Concue par le Braille Institute pour maximiser la
+                      lisibilite, notamment pour les personnes malvoyantes.
+                      Devant le jury, c'est un choix que tu peux JUSTIFIER.
+
+JetBrains Mono        Une police a chasse fixe, faite pour lire du code.
+                      Elle sert aux adresses IP, aux commandes, aux versions.
+
+
+POUR EN CHANGER
+--------------------------------------------------------------------------------
+
+Remplace le fichier en gardant EXACTEMENT le meme nom, ou modifie les blocs
+@font-face de la section 03 de assets/css/style.css. Garde le format woff2 :
+il est environ quatre fois plus leger que le .ttf.

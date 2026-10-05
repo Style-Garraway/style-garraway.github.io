@@ -1,0 +1,61 @@
+IMAGES DU SITE
+================================================================================
+
+CE QUI EST DEJA LA
+--------------------------------------------------------------------------------
+
+apercu.png   1200 x 630 pixels, 8.8 Ko
+
+  C'est l'image qui s'affiche quand quelqu'un partage le lien de ton site sur
+  LinkedIn, WhatsApp, Discord ou Slack. Elle reprend la geometrie du Fil,
+  comme le favicon.
+
+  Elle ne contient volontairement AUCUN texte : les plateformes affichent deja
+  ton nom et ta phrase d'accroche a cote de l'image, en les lisant dans les
+  balises Open Graph de index.html. Du texte dans l'image ferait doublon, et
+  serait illisible sur un petit ecran.
+
+  Si tu changes de nom ou de poste, tu n'as donc PAS besoin de refaire l'image.
+
+
+SI TU VEUX AJOUTER DES CAPTURES D'ECRAN DE TES PROJETS
+--------------------------------------------------------------------------------
+
+C'est une bonne idee : une capture de ta console Active Directory ou de ton
+tableau de bord GLPI vaut mieux qu'un paragraphe. Voici les regles a tenir.
+
+FORMAT
+  Convertis tes captures en WebP. Une capture PNG de 800 Ko tombe souvent
+  autour de 80 Ko en WebP, pour une qualite identique a l'oeil.
+  Cherche "png to webp converter" en ligne.
+
+TAILLE
+  Pas plus de 1400 pixels de large. Personne ne regardera ton site sur un
+  ecran qui a besoin de plus.
+
+POIDS
+  Vise moins de 150 Ko par image. Ton objectif de chargement est sous
+  une seconde : trois captures a 500 Ko le font exploser.
+
+NOMMAGE
+  Sans accent, sans espace, en minuscules, avec des tirets :
+      projet-share-arborescence-ftp.webp
+      mairie-abymes-console-ad.webp
+      chu-glpi-cycle-ticket.webp
+
+ATTENTION AUX DONNEES QUI TRAINENT DANS UNE CAPTURE
+  Avant de publier, verifie qu'on ne voit pas :
+    - de mots de passe (meme ceux des TP, ca fait mauvais effet)
+    - de vraies adresses IP d'un reseau d'entreprise
+    - de noms de vrais utilisateurs ou de vrais patients
+    - le nom de ta session Windows en bas de l'ecran
+  Floute ou recadre. Un jury remarque ce genre de detail, et un recruteur en
+  securite encore plus.
+
+DEUX CHOSES OBLIGATOIRES DANS LE CODE
+  1. loading="lazy" sur la balise <img>, pour que l'image ne se charge que
+     lorsqu'on arrive dessus.
+  2. Un texte alternatif alt="..." qui DECRIT l'image. Pas "capture d'ecran",
+     mais "Console Active Directory montrant les huit unites d'organisation
+     de la mairie". C'est ce que lit une personne aveugle, et c'est aussi ce
+     que lit Google.
