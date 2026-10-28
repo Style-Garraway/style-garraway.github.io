@@ -205,7 +205,6 @@ const PAGES = [
 
 const CHIFFRES = [
   { depuis: "pages",          libelle: "pages de documentation technique" },
-  { valeur: 21,               libelle: "tests conformes sur 23, au TP n°1" },
   { depuis: "certifications", libelle: "certifications Cisco obtenues" },
   { depuis: "competences",    libelle: "compétences, chacune avec sa source" }
 ];
@@ -214,19 +213,19 @@ const CHIFFRES = [
 /* ==========================================================================
    1 quater. LE TERMINAL ANIMÉ (accueil)
    --------------------------------------------------------------------------
-   Des commandes qui se tapent toutes seules. Chaque ligne vient d'un test de
-   recette de tes documentations : n'en ajoute pas qui ne soient pas tirées
+   Des commandes qui se tapent toutes seules. Chaque ligne vient d'une commande
+   de tes documentations : n'en ajoute pas qui ne soient pas tirées
    d'un de tes TP. Champs : invite ("PS>" Windows, "$" Linux), commande,
-   sortie (le résultat attendu et obtenu), source (le TP et le test).
+   sortie (le résultat attendu et obtenu), source (le TP).
    Pour retirer le terminal : const TERMINAL = [];
    ========================================================================== */
 
 const TERMINAL = [
-  { invite: "PS>", commande: "nslookup srvad.ville-abymes.fr",  sortie: "192.168.60.2",          source: "TP n°1 — test T2" },
-  { invite: "PS>", commande: "Get-DhcpServerInDC",              sortie: "srvad.ville-abymes.fr", source: "TP n°1 — test T8" },
-  { invite: "$",   commande: "ping 192.168.60.4",               sortie: "0 % de perte",          source: "TP n°3 — test T7" },
-  { invite: "$",   commande: "systemctl status haproxy",        sortie: "active (running)",      source: "TP n°4 — test T11" },
-  { invite: "$",   commande: "ping srvweb2",                    sortie: "4/4 réponses",          source: "TP n°4 — test T3" }
+  { invite: "PS>", commande: "nslookup srvad.ville-abymes.fr",  sortie: "192.168.60.2",          source: "TP n°1 — DNS" },
+  { invite: "PS>", commande: "Get-DhcpServerInDC",              sortie: "srvad.ville-abymes.fr", source: "TP n°1 — DHCP" },
+  { invite: "$",   commande: "ping 192.168.60.4",               sortie: "0 % de perte",          source: "TP n°3 — Heartbeat" },
+  { invite: "$",   commande: "systemctl status haproxy",        sortie: "active (running)",      source: "TP n°4 — HAProxy" },
+  { invite: "$",   commande: "ping srvweb2",                    sortie: "4/4 réponses",          source: "TP n°4 — HAProxy" }
 ];
 
 
@@ -328,7 +327,7 @@ const COMPETENCES = [
       { nom: "GLPI 10.0.17",                    etat: "service", ou: "TP n°2 Bloc 2 — installation, profils, cycle de vie des tickets" },
       { nom: "OCS Inventory NG 2.12.1",         etat: "service", ou: "TP n°3 Bloc 2 — inventaire automatique et remontée vers GLPI" },
       { nom: "ITIL — gestion des configurations", etat: "rodage", ou: "TP n°3 Bloc 2 — CMDB et éléments de configuration" },
-      { nom: "Documentation technique et plan de recette", etat: "service", ou: "TP n°6, n°7 et TP n°1 Bloc 2 — documentation de 100 pages, 23 tests de recette" }
+      { nom: "Documentation technique", etat: "service", ou: "TP n°6, n°7 et TP n°1 Bloc 2 — documentation de 98 pages" }
     ]
   },
 
@@ -419,7 +418,6 @@ const PROJETS = [
              "VMware Workstation Pro", "PowerShell", "Paquets MSI"],
 
     resultats: [
-      "23 scénarios de recette déroulés : 21 conformes, 1 non conforme, 1 non réalisé.",
       "Un agent ouvre sa session sur n'importe lequel des deux postes et retrouve son fond d'écran, son lecteur réseau et ses documents.",
       "Firefox 155 et Notepad++ 8.9 installés sur les postes sans aucune intervention sur les machines.",
       "Cloisonnement vérifié : la Direction monte le lecteur W:, la comptabilité le lecteur X:, et aucun des deux ne voit l'autre.",
@@ -439,11 +437,11 @@ const PROJETS = [
       "Déployer et paramétrer des services réseau",
       "Gérer des comptes, des groupes et des droits d'accès",
       "Automatiser la configuration d'un parc par stratégies",
-      "Rédiger un plan de tests et documenter la solution livrée"
+      "Documenter la solution livrée"
     ],
 
     /* Le document est la piece maitresse de ce projet : il prouve, captures
-       et plan de recette a l'appui, ce que les lignes ci-dessus affirment.
+       a l'appui, ce que les lignes ci-dessus affirment.
        Laisse ce bloc absent pour un projet sans document a telecharger. */
     /* L'image affichee tout en haut de la page du projet. */
     illustration: {
@@ -461,9 +459,9 @@ const PROJETS = [
 
     document: {
       fichier: "assets/docs/documentation-technique-tp1-mairie-abymes.pdf",
-      pages: 100,
+      pages: 98,
       poids: "3,1 Mo",
-      resume: "Chaque étape est reproductible : chemins de menus complets, valeurs exactes, commandes à recopier, 84 captures commentées, plan de recette, difficultés rencontrées, limites et glossaire."
+      resume: "Chaque étape est reproductible : chemins de menus complets, valeurs exactes, commandes à recopier, 84 captures commentées, difficultés rencontrées, limites et glossaire."
     }
   },
 
