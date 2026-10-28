@@ -518,7 +518,7 @@ const PROJETS = [
 
     document: {
       fichier: "assets/docs/documentation-technique-tp6-apache2.pdf",
-      pages: 68,
+      pages: 67,
       poids: "1,7 Mo",
       resume: "Rapport de réalisation et guide pas à pas : chaque étape est reproductible, avec les commandes, les captures commentées, les difficultés rencontrées et leurs solutions."
     }
@@ -543,7 +543,6 @@ const PROJETS = [
     outils: ["Debian 13 Trixie", "Apache 2", "Heartbeat", "VMware Workstation", "ping / arp", "systemctl", "Firefox"],
 
     resultats: [
-      "14 tests de recette : 11 conformes, 1 conforme avec réserve (SRVWEB2 affichait une ancienne page), 2 non réalisés ou non capturés.",
       "Panne simulée de SRVWEB1 (arrêt de Heartbeat) : SRVWEB2 reprend l'adresse 192.168.60.4 en perdant une seule requête ; la bascule est prouvée par le changement d'adresse MAC.",
       "Au retour de SRVWEB1, il récupère automatiquement la main.",
       "Limites identifiées et documentées : Heartbeat surveille les machines, pas Apache ; il n'est plus maintenu depuis 2014, Pacemaker/Corosync ou Keepalived sont les solutions actuelles."
@@ -572,9 +571,9 @@ const PROJETS = [
 
     document: {
       fichier: "assets/docs/documentation-technique-tp3-heartbeat.pdf",
-      pages: 35,
+      pages: 34,
       poids: "1,1 Mo",
-      resume: "Rapport de réalisation et guide technique : étapes pas à pas, tableau de recette, difficultés rencontrées, limites et perspectives, aide-mémoire des commandes."
+      resume: "Rapport de réalisation et guide technique : étapes pas à pas, difficultés rencontrées, limites et perspectives, aide-mémoire des commandes."
     }
   },
 
@@ -597,13 +596,12 @@ const PROJETS = [
     outils: ["Debian 13 Trixie", "HAProxy 3.0", "Apache 2", "VMware Workstation", "curl", "systemctl", "Page de statistiques HAProxy"],
 
     resultats: [
-      "17 tests de recette : 14 conformes, 3 à compléter (captures manquantes).",
       "Répartition parfaitement égale : 244 requêtes pour chacun des deux serveurs, sur 488.",
       "Arrêt d'Apache sur SRVWEB1 détecté en quelques secondes ; le site reste servi par SRVWEB2.",
       "Comparaison documentée avec le TP n°3 : HAProxy utilise les deux serveurs et vérifie le service web lui-même, pas seulement la machine."
     ],
 
-    appris: "La répartition de charge règle un problème que le cluster actif/passif laissait entier : le serveur de secours inutilisé. Mais elle déplace le point de défaillance : SRVHAPROXY est lui-même unique, et s'il tombe tout s'arrête. La suite logique est de le doubler avec Keepalived. J'ai aussi appris à ne pas masquer mes manques : la documentation signale les captures à compléter."
+    appris: "La répartition de charge règle un problème que le cluster actif/passif laissait entier : le serveur de secours inutilisé. Mais elle déplace le point de défaillance : SRVHAPROXY est lui-même unique, et s'il tombe tout s'arrête. La suite logique est de le doubler avec Keepalived."
     ,    referentiel: [
       "Installer et configurer des éléments d'infrastructure",
       "Déployer une solution d'infrastructure",
@@ -626,9 +624,9 @@ const PROJETS = [
 
     document: {
       fichier: "assets/docs/documentation-technique-tp4-haproxy.pdf",
-      pages: 34,
+      pages: 32,
       poids: "1,1 Mo",
-      resume: "Rapport de réalisation et guide technique : étapes pas à pas, tableau de recette de 17 tests, difficultés rencontrées, limites et perspectives, aide-mémoire des commandes."
+      resume: "Rapport de réalisation et guide technique : étapes pas à pas, difficultés rencontrées, limites et perspectives, aide-mémoire des commandes."
     }
   }
 
