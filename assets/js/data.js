@@ -627,6 +627,63 @@ const PROJETS = [
       resume: "Rapport de réalisation et guide technique : étapes pas à pas, difficultés rencontrées, limites et perspectives, aide-mémoire des commandes."
     }
   }
+  ,
+  /* ======================================================================
+     TP n°2 — TrueNAS (Bloc 3). Contenu tire de la documentation, section
+     par section : rien n'est ajoute qui n'y figure pas.
+     ====================================================================== */
+  {
+    id: "truenas-sauvegarde",
+    titre: "Sauvegarde et RAID avec TrueNAS pour la mairie des Abymes",
+    sousTitre: "TP n°2 — Bloc 3, Cybersécurité des services informatiques",
+    periode: "Octobre 2026",
+    tags: ["TrueNAS CORE", "RAID 1 et RAID 5", "rsync", "SSH", "cron", "SMB 3", "VMware"],
+
+    contexte: "La mairie des Abymes dispose de cinq serveurs physiques de virtualisation, qui hébergent chacun deux à quatre serveurs virtuels (données, DNS, messagerie, FTP, DHCP, contrôleur de domaine Active Directory). M. Laurent, responsable de l'équipe technique, veut mettre en place une solution de sauvegarde des données sans investir dans un équipement matériel.",
+
+    probleme: "Les données des services doivent être sauvegardées régulièrement, avec un logiciel libre, sur un stockage qui supporte la panne d'un disque, et rester accessibles aux seuls comptes autorisés.",
+
+    solution: "Un serveur de stockage TrueNAS CORE 13.0-U5.3, nommé srvnas, est installé sur une machine virtuelle sous VMware. Il héberge un pool RAID 1 (miroir) et un pool RAID 5 (RAIDZ1), avec un dataset Sauvegardes partagé en SMB 3 et réservé à un compte dédié, truenas_admin. Depuis le contrôleur de domaine srvad (Windows Server 2025), un script shell planifié par cron copie les dossiers des services vers srvnas toutes les cinq minutes avec rsync, par une liaison SSH authentifiée par clé, sans mot de passe. Les deux dispositifs RAID sont éprouvés par des pannes simulées : retrait d'un disque, accès aux données, remplacement, reconstruction.",
+
+    outils: ["TrueNAS CORE 13.0-U5.3", "ZFS (RAID 1, RAIDZ1)", "SMB 3", "rsync", "SSH", "cron", "Cygwin", "Windows Server 2025", "VMware Workstation"],
+
+    resultats: [
+      "Sauvegarde automatique toutes les cinq minutes depuis srvad, par SSH avec clé, sans mot de passe ; chaque partage de sauvegarde n'est accessible qu'à un compte dédié.",
+      "RAID 1 et RAID 5 testés par la panne simulée d'un disque : aucune perte de données ni coupure d'accès, et le disque remplacé est reconstruit sans erreur.",
+      "Hors énoncé : srvnas intégré à l'Active Directory de la mairie, puis site web sauvegardé et restauré après la disparition de sa page d'accueil.",
+      "Limites relevées dans le rapport : un RAID ne remplace pas une copie externalisée, et SMART n'est pas exploitable sur des disques virtuels."
+    ],
+
+    appris: "Un RAID protège d'une panne de disque, pas d'un sinistre : les sauvegardes restent dans la même infrastructure que les données d'origine, et rsync sans historique remplace une version saine par une version corrompue à la sauvegarde suivante. Les pistes que j'ai notées sont les instantanés ZFS, la réplication vers un second NAS et la supervision. J'ai aussi retenu que les blocages venaient souvent d'un détail : une zone DNS inversée mal nommée, des disques virtuels sans numéro de série, ou un chemin source erroné.",
+
+    referentiel: [
+      "Installer et configurer des éléments d'infrastructure",
+      "Déployer une solution d'infrastructure",
+      "Administrer un système",
+      "Administrer sur site et à distance des éléments d'une infrastructure",
+      "Automatiser des tâches d'administration",
+      "Tester l'intégration et l'acceptation d'une solution d'infrastructure",
+      "Rédiger ou mettre à jour la documentation technique d'une solution d'infrastructure"
+    ],
+
+    illustration: {
+      fichier: "assets/img/schema-tp2-infrastructure.jpg",
+      alt: "Schéma de l'infrastructure : une passerelle 192.168.60.1 reliée à Internet et à un commutateur virtuel VMware (segment LAN TP2, réseau 192.168.60.0/24, domaine ville-abymes.fr) qui relie poste0 sous Windows 11, srvad sous Windows Server 2025, srvnas sous TrueNAS CORE avec ses pools RAID1 et RAID5, et srvweb sous Debian avec Apache. srvad et srvweb sauvegardent vers srvnas par SSH et rsync ; srvnagios figure hors périmètre.",
+      legende: "Schéma du rapport (figure 1). Les écarts avec l'énoncé (noms de disques, systèmes, mémoire) sont détaillés dans la documentation, section 3.2."
+    },
+
+    enonce: {
+      fichier: "assets/docs/enonce-tp2-bloc3.pdf",
+      poids: "1,4 Mo"
+    },
+
+    document: {
+      fichier: "assets/docs/documentation-technique-tp2-truenas.pdf",
+      pages: 113,
+      poids: "7,4 Mo",
+      resume: "Rapport de réalisation et guide pas à pas en 14 étapes : captures commentées, difficultés rencontrées, exploitation et maintenance, aide-mémoire des commandes, glossaire et annexe des fichiers de configuration."
+    }
+  }
 
 ];
 
