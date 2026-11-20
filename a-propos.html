@@ -64,7 +64,7 @@
   <meta property="og:locale" content="fr_FR">
   <meta property="og:title" content="À propos — Style Garraway">
   <meta property="og:description" content="Étudiant en 2e année de BTS SIO SISR à Baimbridge. Infrastructures montées en machines virtuelles et sur matériel réel : Active Directory, Apache, GLPI.">
-  <meta property="og:image" content="assets/img/apercu.png">
+  <meta property="og:image" content="https://style-garraway.github.io/assets/img/apercu.png">
   <meta property="og:image:alt" content="Style Garraway, administrateur reseau, BTS SIO SISR">
   <meta name="twitter:card" content="summary_large_image">
 
@@ -92,7 +92,11 @@
         <h1 class="section__titre" id="page-titre"></h1>
         <p class="section__chapo" id="page-chapo"></p>
 
-        <div class="a-propos" id="a-propos-texte"></div>
+        <div class="a-propos-grille">
+          <div class="a-propos" id="a-propos-texte"></div>
+          <!-- L'encart « En bref » : rempli par app.js a partir de data.js. -->
+          <aside class="en-bref" id="a-propos-bref" aria-label="En bref"></aside>
+        </div>
 
       </section>
 

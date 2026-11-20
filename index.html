@@ -64,7 +64,7 @@
   <meta property="og:locale" content="fr_FR">
   <meta property="og:title" content="Style Garraway — Administrateur réseau">
   <meta property="og:description" content="Style Garraway, étudiant en BTS SIO SISR à Baimbridge. Active Directory, DHCP, DNS, Debian : infrastructures documentées, certifications vérifiables.">
-  <meta property="og:image" content="assets/img/apercu.png">
+  <meta property="og:image" content="https://style-garraway.github.io/assets/img/apercu.png">
   <meta property="og:image:alt" content="Style Garraway, administrateur reseau, BTS SIO SISR">
   <meta name="twitter:card" content="summary_large_image">
 
@@ -93,11 +93,13 @@
       "name": "Lycee General et Technologique de Baimbridge",
       "address": { "@type": "PostalAddress", "addressLocality": "Les Abymes", "addressCountry": "FR" }
     },
-    "image": "assets/img/portrait-style-garraway.jpg",
+    "image": "https://style-garraway.github.io/assets/img/portrait-style-garraway.jpg",
     "sameAs": [
       "https://www.linkedin.com/in/style-garraway-1413b0350/",
       "https://www.credly.com/users/style-garraway",
-      "https://www.skills.google/public_profiles/92348b2c-c3c6-48b8-985e-c905e840d7e4"
+      "https://www.skills.google/public_profiles/92348b2c-c3c6-48b8-985e-c905e840d7e4",
+      "https://learn.microsoft.com/fr-fr/users/stylegarraway-1927/",
+      "https://oaiacademy.credential.net/profile/stylegarraway388070/wallet"
     ],
     "knowsAbout": [
       "Windows Server 2022", "Windows Server 2025", "Active Directory", "DHCP", "DNS",
@@ -158,8 +160,14 @@
         <!-- Le terminal anime, rempli par app.js a partir de TERMINAL. -->
         <div class="terminal" id="terminal" role="group" aria-label="Extraits de commandes de mes TP"></div>
 
-        <!-- Les six vignettes vers les autres pages du site. -->
-        <ul class="sommaire" id="sommaire"></ul>
+        <!-- Les trois derniers projets, tires de la liste PROJETS de data.js
+             (data-max="3" : le plus recent en premier). -->
+        <h2 class="accueil-titre" id="titre-projets">Derniers projets</h2>
+        <ul class="projets" id="projets-liste" data-max="3" aria-labelledby="titre-projets"></ul>
+
+        <!-- Les vignettes vers les autres pages du site. -->
+        <h2 class="accueil-titre" id="titre-sommaire">Explorer le site</h2>
+        <ul class="sommaire" id="sommaire" aria-labelledby="titre-sommaire"></ul>
       </section>
 
     </main>
