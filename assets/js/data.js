@@ -88,8 +88,13 @@ const IDENTITE = {
   googleSkills: "https://www.skills.google/public_profiles/92348b2c-c3c6-48b8-985e-c905e840d7e4",
 
   // MICROSOFT LEARN — ton profil public. C'est de là que viennent les badges
-  // officiels et les dates exactes des dix modules.
+  // officiels et les dates exactes des modules.
   microsoftLearn: "https://learn.microsoft.com/fr-fr/users/stylegarraway-1927/",
+
+  // OPENAI ACADEMY — ton portefeuille public de titres (badges et certificat
+  // de parcours). Chaque titre y affiche sa date de délivrance et sa date de
+  // fin de validité. Laisse "" pour retirer le bouton.
+  openaiAcademy: "https://oaiacademy.credential.net/profile/stylegarraway388070/wallet",
 
   // GITHUB — tu n'en as pas encore.
   // Laisse la chaîne vide "" et le bouton n'apparaîtra pas du tout.
@@ -139,7 +144,8 @@ const PAGES = [
     menu: "Compétences",
     titre: "Compétences",
     chapo: "Pour chaque compétence, l'endroit exact où je l'ai acquise : un TP, un stage, ou une certification vérifiable.",
-    resume: "43 compétences réparties en 8 domaines, chacune sourcée."
+    // Le nombre affiché sur l'accueil est calculé tout seul par le site.
+    resume: "Mes compétences réparties par domaine, chacune sourcée."
   },
   {
     cle: "projets",
@@ -361,7 +367,10 @@ const COMPETENCES = [
       { nom: "Fondamentaux de l'IA — capacités et limites", ou: "AI Foundations, OpenAI Academy — et module Microsoft Learn sur les concepts de l'IA" },
       { nom: "IA générative", ou: "Google Skills et Microsoft Learn — IA et agents génératifs, mai 2026" },
       { nom: "IA responsable", ou: "Google Skills — Introduction à l'IA responsable, mai 2026" },
-      { nom: "Usage raisonné des assistants IA", ou: "AI Fluency: Framework & Foundations, Claude Academy — et AI Fluency for Students, Anthropic" }
+      { nom: "Usage raisonné des assistants IA", ou: "AI Fluency: Framework & Foundations, Claude Academy — et AI Fluency for Students, Anthropic" },
+      { nom: "Méthodes de travail assistées par IA — découpage en étapes, points de contrôle", ou: "Applied AI Foundations, OpenAI Academy — novembre 2026" },
+      { nom: "Agents IA — cadrage de la tâche et vérification du résultat", ou: "Agents and Workflows, OpenAI Academy — parcours Apply AI at Work terminé, novembre 2026" },
+      { nom: "Analyse de texte avec Azure Language", ou: "Deux modules Microsoft Learn — analyse de texte et agent relié à un serveur MCP, novembre 2026" }
     ]
   }
 
@@ -380,22 +389,9 @@ const COMPETENCES = [
      appris    → ce que tu retiens, y compris ce qui a coincé
    ========================================================================== */
 
-/* ⚠️ LES PROJETS NE SONT PLUS AFFICHÉS SUR LE SITE.
-   --------------------------------------------------------------------------
-   La page Projets a été retirée du menu et ses quatre fichiers HTML ont été
-   déplacés dans   E:\portfolio-style-bts--projets-retires
-   Rien n'est perdu : le contenu ci-dessous est intact.
-
-   POUR LES REMETTRE :
-     1. Recopie les quatre fichiers depuis le dossier ci-dessus vers la racine
-        du site (projets.html et les trois projet-*.html).
-     2. Remets l'entrée correspondante dans la liste PAGES plus haut :
-          { cle: "projets", fichier: "projets.html", menu: "Projets",
-            titre: "Projets", chapo: "...", resume: "..." },
-     3. Le menu, le pied de page et la vignette d'accueil reviendront seuls.
-
-   Tant qu'ils sont absents, cette liste ne gêne rien : app.js ne construit
-   les projets que si la page correspondante existe. */
+/* UN PROJET = un bloc ci-dessous + un fichier projet-<id>.html à la racine
+   (copie d'une page projet existante, avec son attribut data-projet changé).
+   Ordre : du plus ancien au plus récent. L'accueil affiche les trois derniers. */
 const PROJETS = [
 
   {
@@ -852,23 +848,61 @@ const CERTIFICATIONS = [
   },
 
   {
-    categorie: "Badges de formation",
-    intro: "Des parcours suivis en autonomie, hors référentiel du BTS.",
+    categorie: "Intelligence artificielle : badges et certificats",
+    intro: "Des parcours suivis en autonomie, hors référentiel du BTS. Les quatre titres OpenAI Academy se vérifient en ligne : chaque évaluation a été réussie avec au moins 80 %, et chaque titre est valable six mois.",
     items: [
+      /* OPENAI ACADEMY — le parcours « Apply AI at Work » : trois cours, chacun
+         avec son badge, puis un certificat de fin de parcours. Les quatre
+         titres viennent de ton portefeuille public (champ openaiAcademy, en
+         haut de ce fichier). ATTENTION : ils expirent six mois après leur
+         délivrance. La date de fin est écrite sur chaque carte : passé cette
+         date, repasse l'évaluation ou retire la carte. */
       {
-        /* OpenAI Academy fournit les deux : le certificat en PDF ET une page
-           publique de verification. On affiche les deux liens : le fichier
-           pour l emporter, l adresse pour que le recruteur controle a la
-           source sans avoir a me croire. */
+        nom: "Apply AI at Work Pathway Completion",
+        organisme: "OpenAI Academy",
+        date: "20 novembre 2026",
+        badge: "",
+        apercu: "assets/certifs/apercu-openai-apply-ai-at-work.png",
+        fichier: "",
+        poids: "",
+        verif: "https://oaiacademy.credential.net/81be200d-8fbf-4c5c-8c3a-594b3d5fb4fc",
+        couvre: "Certificat de fin de parcours : les trois cours AI Foundations, Applied AI Foundations et Agents and Workflows terminés. Identifiant 201095564, valable jusqu'au 20 mai 2027."
+      },
+      {
+        nom: "Agents and Workflows",
+        organisme: "OpenAI Academy",
+        date: "20 novembre 2026",
+        badge: "assets/certifs/badge-openai-agents-and-workflows.png",
+        apercu: "",
+        fichier: "",
+        poids: "",
+        verif: "https://oaiacademy.credential.net/3e929eb8-a895-4d2e-aec0-c44f51b49601",
+        couvre: "Diriger un agent IA sur un travail structuré : cadrer la tâche, fournir le contexte, vérifier le résultat, améliorer la méthode. Valable jusqu'au 20 mai 2027."
+      },
+      {
+        nom: "Applied AI Foundations",
+        organisme: "OpenAI Academy",
+        date: "19 novembre 2026",
+        badge: "assets/certifs/badge-openai-applied-ai-foundations.png",
+        apercu: "",
+        fichier: "",
+        poids: "",
+        verif: "https://oaiacademy.credential.net/f8904035-e83d-4bca-acac-20889eaf4828",
+        couvre: "Transformer une tâche récurrente en méthode de travail réutilisable : découpage en étapes, choix des outils, points de contrôle. Valable jusqu'au 19 mai 2027."
+      },
+      {
+        /* Deux preuves pour ce cours : le certificat en PDF (cours terminé le
+           6 septembre) et le badge numérique vérifiable en ligne (délivré le
+           16 septembre). Le PDF porte lui-même son adresse de vérification. */
         nom: "AI Foundations",
         organisme: "OpenAI Academy",
         date: "6 septembre 2026",
-        badge: "",
+        badge: "assets/certifs/badge-openai-ai-foundations.png",
         apercu: "assets/certifs/apercu-openai-ai-foundations.png",
         fichier: "assets/certifs/certificat-openai-ai-foundations.pdf",
         poids: "697 Ko",
-        verif: "https://academy.openai.com/public/certificate/xkqihopg1e",
-        couvre: "Fondamentaux de l intelligence artificielle : capacites, limites et usages."
+        verif: "https://oaiacademy.credential.net/b896b9f0-1a2b-4de2-9129-f42ef5f867bf",
+        couvre: "Fondamentaux de l'IA et des grands modèles de langage : consignes claires, contexte, évaluation des réponses, usage responsable. Badge délivré le 16 septembre 2026, valable jusqu'au 16 mars 2027."
       },
       {
         /* Claude Academy ne propose aucun fichier à télécharger : le badge
@@ -951,7 +985,7 @@ const CERTIFICATIONS = [
        Les badges et les dates viennent de ton profil public Microsoft Learn :
        https://learn.microsoft.com/fr-fr/users/stylegarraway-1927/
        Ce sont donc les images officielles, pas des visuels refaits. */
-    intro: "Dix modules de formation terminés sur Microsoft Learn, dont un trophée de parcours. Ce ne sont pas des certifications : ils attestent d'un parcours suivi et d'évaluations de module réussies, pas d'un examen surveillé. Ils sont affichés à part pour que la distinction soit nette.",
+    intro: "Douze modules de formation terminés sur Microsoft Learn, dont un trophée de parcours. Ce ne sont pas des certifications : ils attestent d'un parcours suivi et, pour dix d'entre eux, d'une évaluation de module réussie, pas d'un examen surveillé. Ils sont affichés à part pour que la distinction soit nette.",
     items: [
       { nom: "Présentation de l'infrastructure cloud : décrire les concepts cloud",
         organisme: "Microsoft Learn", date: "8 mars 2026",
@@ -1011,7 +1045,25 @@ const CERTIFICATIONS = [
         organisme: "Microsoft Learn", date: "2 mai 2026",
         badge: "assets/certifs/badge-microsoft-ia-agents-generatifs.svg",
         apercu: "", fichier: "", poids: "", verif: "https://learn.microsoft.com/fr-fr/users/stylegarraway-1927/",
-        couvre: "Évaluation du module réussie." }
+        /* Ton profil n'affiche PAS « Évaluation du module réussie » pour ce
+           module (ni pour le dernier de la liste) : on écrit donc seulement
+           qu'il est terminé. N'écris la mention que si le profil la porte. */
+        couvre: "Module terminé." },
+
+      /* Les deux titres ci-dessous sont recopiés tels que Microsoft les
+         affiche en français sur ton profil (« la langue Azure » y désigne le
+         service Azure Language) : un recruteur doit retrouver le même intitulé. */
+      { nom: "Analyser du texte avec la langue Azure dans Les outils Foundry",
+        organisme: "Microsoft Learn", date: "15 novembre 2026",
+        badge: "assets/certifs/badge-microsoft-analyser-texte-azure-language.svg",
+        apercu: "", fichier: "", poids: "", verif: "https://learn.microsoft.com/fr-fr/users/stylegarraway-1927/",
+        couvre: "Analyse de texte avec le service Azure Language (Foundry Tools). Évaluation du module réussie." },
+
+      { nom: "Développer un agent d'analyse de texte avec le serveur MCP du langage Azure",
+        organisme: "Microsoft Learn", date: "17 novembre 2026",
+        badge: "assets/certifs/badge-microsoft-agent-analyse-texte-mcp.svg",
+        apercu: "", fichier: "", poids: "", verif: "https://learn.microsoft.com/fr-fr/users/stylegarraway-1927/",
+        couvre: "Agent IA relié au serveur MCP d'Azure Language : détection de langue, reconnaissance d'entités, masquage des données personnelles. Module terminé." }
     ]
   },
 

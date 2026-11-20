@@ -372,6 +372,57 @@
     var c = el("a-propos-texte");
     if (!c) { return; }
     remplir(c, A_PROPOS.map(function (ligne) { return creer("p", null, ligne); }));
+
+    /* L'encart « En bref » : le portrait et quatre repères, tous repris de ce
+       qui est déjà saisi ailleurs dans data.js (identité, parcours). Rien
+       n'est écrit une seconde fois, donc rien ne peut se contredire. */
+    var bref = el("a-propos-bref");
+    if (!bref) { return; }
+
+    var contenu = [];
+
+    if (IDENTITE.photo) {
+      var photo = document.createElement("img");
+      photo.className = "hero__portrait";
+      photo.src = IDENTITE.photo;
+      photo.alt = IDENTITE.photoAlt || "";
+      photo.decoding = "async";
+      var cercle = creer("div", "hero__cercle");
+      cercle.appendChild(photo);
+      var cadre = creer("div", "hero__cadre");
+      cadre.appendChild(cercle);
+      contenu.push(cadre);
+    }
+
+    var reperes = [
+      ["Formation", IDENTITE.statut],
+      ["Établissement", IDENTITE.etablissement],
+      ["Poste visé", IDENTITE.posteVise]
+    ];
+    /* PARCOURS va du plus récent au plus ancien : le premier stage est le dernier en date. */
+    var stage = PARCOURS.filter(function (e) { return e.type === "stage"; })[0];
+    if (stage) { reperes.push(["Dernier stage", stage.lieu + ", " + stage.periode.toLowerCase()]); }
+
+    var liste = creer("dl", "en-bref__liste");
+    reperes.forEach(function (r) {
+      liste.appendChild(creer("dt", "en-bref__terme", r[0]));
+      liste.appendChild(creer("dd", "en-bref__valeur", r[1]));
+    });
+    contenu.push(liste);
+
+    var actions = creer("div", "en-bref__actions");
+    if (IDENTITE.cvFichier) {
+      var cv = creer("a", "bouton bouton--plein", "Télécharger mon CV");
+      cv.href = IDENTITE.cvFichier;
+      cv.setAttribute("download", "");
+      actions.appendChild(cv);
+    }
+    var contact = creer("a", "bouton bouton--vide", "Me contacter");
+    contact.href = "contact.html";
+    actions.appendChild(contact);
+    contenu.push(actions);
+
+    remplir(bref, contenu);
   }
 
   /* --- Compétences ------------------------------------------------------ */
@@ -457,7 +508,13 @@
       return;
     }
 
-    remplir(c, PROJETS.map(function (projet) {
+    /* Sur l'accueil, la liste porte data-max="3" : on n'y montre que les trois
+       derniers projets, le plus récent en premier, sous un titre de section
+       (d'où le h3). La page Projets, elle, les montre tous. */
+    var max = parseInt(c.getAttribute("data-max"), 10);
+    var liste = max ? PROJETS.slice(-max).reverse() : PROJETS;
+
+    remplir(c, liste.map(function (projet) {
       var item = creer("li");
 
       /* La carte entière est un lien : plus facile à viser au doigt sur un
@@ -466,7 +523,7 @@
       carte.href = fichierProjet(projet);
 
       carte.appendChild(creer("span", "projet__periode", projet.periode));
-      carte.appendChild(creer("h2", "projet__titre", projet.titre));
+      carte.appendChild(creer(max ? "h3" : "h2", "projet__titre", projet.titre));
       carte.appendChild(creer("span", "projet__sous-titre", projet.sousTitre));
       carte.appendChild(creer("span", "projet__resume", extrait(projet.probleme, 160)));
 
@@ -630,6 +687,9 @@
       if (IDENTITE.microsoftLearn) {
         sources.push({ url: IDENTITE.microsoftLearn, nom: "Microsoft Learn", detail: "les modules Microsoft" });
       }
+      if (IDENTITE.openaiAcademy) {
+        sources.push({ url: IDENTITE.openaiAcademy, nom: "OpenAI Academy", detail: "les titres OpenAI Academy" });
+      }
 
       if (!sources.length) {
         verif.remove();
@@ -690,8 +750,26 @@
       remplir(resume, compteurs);
     }
 
-    remplir(c, CERTIFICATIONS.map(function (groupe) {
+    /* Le sommaire de la page. Elle est longue : il permet de sauter d'un clic
+       à la catégorie voulue, et annonce combien de titres chacune contient. */
+    var saut = creer("nav", "certifs-sommaire");
+    saut.setAttribute("aria-label", "Aller à une catégorie");
+    var entrees = creer("ul", "certifs-sommaire__liste");
+    CERTIFICATIONS.forEach(function (groupe, i) {
+      var entree = creer("li");
+      var lien = creer("a", "certifs-sommaire__lien", groupe.categorie);
+      lien.href = "#groupe-" + (i + 1);
+      lien.setAttribute("aria-label", groupe.categorie + " : " + groupe.items.length);
+      lien.appendChild(creer("span", "certifs-sommaire__nombre", String(groupe.items.length)));
+      entree.appendChild(lien);
+      entrees.appendChild(entree);
+    });
+    saut.appendChild(entrees);
+    c.parentNode.insertBefore(saut, c);
+
+    remplir(c, CERTIFICATIONS.map(function (groupe, i) {
       var bloc = creer("section", "groupe");
+      bloc.id = "groupe-" + (i + 1);
 
       bloc.appendChild(creer("h2", "groupe__titre", groupe.categorie));
       if (groupe.intro) { bloc.appendChild(creer("p", "groupe__intro", groupe.intro)); }
@@ -970,6 +1048,9 @@
     }
     if (IDENTITE.microsoftLearn) {
       liens.push(lienContact("Microsoft Learn", "Mes modules vérifiables", IDENTITE.microsoftLearn));
+    }
+    if (IDENTITE.openaiAcademy) {
+      liens.push(lienContact("OpenAI Academy", "Mes titres IA vérifiables", IDENTITE.openaiAcademy));
     }
     if (IDENTITE.github) {
       liens.push(lienContact("GitHub", "Mes dépôts", IDENTITE.github));
