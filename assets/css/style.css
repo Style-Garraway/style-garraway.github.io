@@ -340,8 +340,19 @@ code, .donnees {
    07. MISE EN PAGE GÉNÉRALE
    ========================================================================== */
 
+/* Le pied de page reste en bas de l'écran même quand la page est courte
+   (Veille, page 404) : le contenu s'étire pour occuper la hauteur libre. */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
 .page {
   position: relative;          /* sert de repère au Fil */
+  flex: 1 0 auto;
+  width: 100%;
   max-width: var(--largeur-max);
   margin: 0 auto;
   padding-left: var(--page-pad);
@@ -660,7 +671,9 @@ code, .donnees {
   max-width: none;
 }
 
-/* La bande de chiffres clés. Deux colonnes sur téléphone, quatre au-delà. */
+/* La bande de chiffres clés. Deux colonnes sur téléphone ; au-delà, autant de
+   colonnes que de chiffres, chacune assez large pour que son libellé tienne
+   sur une ou deux lignes. */
 .chiffres {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -670,7 +683,7 @@ code, .donnees {
   border-top: 1px solid var(--trait);
 }
 @media (min-width: 700px) {
-  .chiffres { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .chiffres { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
 }
 
 .chiffre {
@@ -752,7 +765,13 @@ code, .donnees {
 .sommaire {
   display: grid;
   gap: var(--esp-s);
-  margin-top: var(--esp-xl);
+}
+
+/* Le titre des deux blocs de l'accueil : « Derniers projets » et « Explorer
+   le site ». */
+.accueil-titre {
+  margin: var(--esp-xl) 0 var(--esp-m);
+  font-size: var(--t-sous);
 }
 
 .vignette {
@@ -845,6 +864,32 @@ code, .donnees {
   max-width: 62ch;
   font-size: clamp(1.02rem, 2.6vw, 1.15rem);
 }
+
+/* L'encart « En bref » : sous le texte sur téléphone, à sa droite sur grand
+   écran (voir section 21). */
+.a-propos-grille { display: grid; gap: var(--esp-l); align-items: start; }
+
+.en-bref {
+  max-width: 24rem;
+  padding: var(--esp-m);
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+}
+/* Le portrait reprend le cadre de l'accueil, en plus petit. Deux classes :
+   cette règle l'emporte sur les tailles « grand écran » du hero. */
+.en-bref .hero__cadre { width: 104px; height: 104px; margin: 0 0 var(--esp-m); padding: 3px; }
+
+.en-bref__liste { margin: 0; }
+.en-bref__terme {
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ardoise);
+}
+.en-bref__valeur { margin: 0 0 var(--esp-s); font-weight: 700; line-height: 1.4; }
+.en-bref__actions { display: flex; flex-wrap: wrap; gap: var(--esp-s); margin-top: var(--esp-m); }
 
 
 /* ==========================================================================
@@ -1318,7 +1363,7 @@ code, .donnees {
   display: flex;
   flex-wrap: wrap;
   gap: var(--esp-s);
-  margin-bottom: var(--esp-xl);
+  margin-bottom: var(--esp-l);
 }
 
 .compteur {
@@ -1354,7 +1399,7 @@ code, .donnees {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--esp-s);
-  margin-bottom: var(--esp-xl);
+  margin-bottom: var(--esp-l);
   padding: var(--esp-m);
   background: var(--voile);
   border-radius: var(--rayon);
@@ -1372,6 +1417,37 @@ code, .donnees {
   display: flex;
   flex-wrap: wrap;
   gap: var(--esp-s);
+  max-width: 100%;
+}
+/* Sur un écran très étroit, un libellé long passe sur deux lignes au lieu de
+   dépasser du cadre. */
+.verification__boutons .bouton { max-width: 100%; white-space: normal; text-align: center; }
+
+/* Le sommaire de la page : une pastille par catégorie, avec son nombre de
+   titres. 44 px de haut au minimum, pour être facile à viser au doigt. */
+.certifs-sommaire { margin-bottom: var(--esp-xl); }
+.certifs-sommaire__liste { display: flex; flex-wrap: wrap; gap: var(--esp-s); }
+.certifs-sommaire__lien {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-s);
+  min-height: 44px;
+  padding: var(--esp-xs) var(--esp-m);
+  background: var(--panneau);
+  border: 1px solid var(--trait);
+  border-radius: 999px;
+  color: var(--encre);
+  font-size: var(--t-petit);
+  font-weight: 700;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: border-color .18s;
+}
+.certifs-sommaire__lien:hover { border-color: var(--accent); color: var(--encre); }
+.certifs-sommaire__nombre {
+  font-family: var(--police-donnees);
+  font-size: var(--t-mini);
+  color: var(--accent);
 }
 
 /* Un groupe = une catégorie (certifications, badges, modules…). */
@@ -1408,11 +1484,14 @@ code, .donnees {
 }
 .certif:hover { border-color: var(--accent); }
 
+/* Hauteur identique pour tous les visuels, badge carré ou certificat en
+   paysage : les titres d'une même rangée s'alignent, et aucun aperçu de
+   certificat ne prend plus de place que les badges voisins. */
 .certif__visuel {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 96px;
+  height: 150px;
 }
 
 /* Le badge officiel : carré, taille fixe, jamais déformé. */
@@ -1422,12 +1501,13 @@ code, .donnees {
   object-fit: contain;
 }
 
-/* L'image d'un certificat : format paysage, sur toute la largeur.
+/* L'image d'un certificat : format paysage, en vignette à la hauteur du bloc.
    Un fond blanc lui est appliqué en mode nuit, sinon le document
    scanné se fondrait dans l'arrière-plan sombre. */
 .certif__apercu {
-  width: 100%;
-  max-width: 320px;
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
   height: auto;
   border: 1px solid var(--trait);
   border-radius: var(--rayon-petit);
@@ -1466,7 +1546,17 @@ code, .donnees {
   font-size: var(--t-petit);
   font-weight: 700;
 }
-.certif__preuve::after { content: " ↗"; }
+/* Espace insécable : la flèche ne part jamais seule à la ligne suivante. */
+.certif__preuve::after { content: "\00a0↗"; }
+
+/* Sur téléphone, une seule carte par rangée : il n'y a plus de titres à
+   aligner. Le visuel reprend sa hauteur naturelle, en plus petit et calé à
+   gauche : la page compte une trentaine de cartes, chacune y gagne en hauteur. */
+@media (max-width: 639.98px) {
+  .certif__visuel { height: auto; justify-content: flex-start; }
+  .certif__badge  { width: 72px; height: 72px; }
+  .certif__apercu { max-height: 130px; }
+}
 
 
 /* ==========================================================================
@@ -1904,12 +1994,27 @@ a.copier:hover { color: var(--encre); }
   .legende { flex-direction: row; flex-wrap: wrap; gap: var(--esp-m); }
   .direct   { grid-template-columns: repeat(2, 1fr); }
   .contact  { flex-direction: row; flex-wrap: wrap; }
-  /* Les repères passent en deux colonnes terme / valeur, alignées. */
-  .reperes  { grid-template-columns: max-content 1fr; align-items: baseline; }
-  .reperes__valeur { margin-bottom: 0; }
   .sommaire { grid-template-columns: repeat(2, 1fr); }
-  .domaines { grid-template-columns: repeat(2, 1fr); }
+  /* Les domaines se rangent en colonnes « maçonnées » : chaque carte garde sa
+     hauteur naturelle et se cale sous la précédente. En grille, une carte
+     courte s'étirait à la hauteur de sa voisine et laissait un grand vide. */
+  .domaines { display: block; columns: 2; column-gap: var(--esp-m); }
+  .domaine  { break-inside: avoid; margin-bottom: var(--esp-m); }
   .projets  { grid-template-columns: repeat(2, 1fr); }
+
+  /* L'accueil : seul le texte garde une largeur de lecture. Chiffres, projets
+     et sommaire prennent toute la largeur, au lieu de rester serrés à gauche.
+     Les trois derniers projets restent l'un sous l'autre jusqu'à 900 px : à
+     deux par rangée, le troisième se retrouverait seul. */
+  .hero { max-width: none; }
+  .hero > * { max-width: 46ch; }
+  .hero > .chiffres,
+  .hero > .accueil-titre,
+  .hero > .projets,
+  .hero > .sommaire,
+  .hero > .hero__reseau { max-width: none; }
+  .hero > .terminal { max-width: 46rem; }
+  .hero > .projets { grid-template-columns: 1fr; }
   .certifs__liste { grid-template-columns: repeat(2, 1fr); }
   .veille   { grid-template-columns: repeat(2, 1fr); }
   .contact  { flex-direction: row; flex-wrap: wrap; }
@@ -1917,6 +2022,12 @@ a.copier:hover { color: var(--encre); }
 
   .pied__interieur { display: flex; flex-wrap: wrap; gap: var(--esp-m); align-items: baseline; }
   .pied__tech { flex-basis: 100%; margin-top: 0; }
+}
+
+/* Entre 640 et 900 px (deux colonnes) : une vignette seule sur la dernière
+   rangée prend toute la largeur, au lieu de rester orpheline dans un coin. */
+@media (min-width: 640px) and (max-width: 899.98px) {
+  .sommaire > li:last-child:nth-child(2n + 1) { grid-column: 1 / -1; }
 }
 
 /* --- À partir de 900 px : le menu se déplie, le burger disparaît ---------- */
@@ -1992,9 +2103,21 @@ a.copier:hover { color: var(--encre); }
     border-radius: 50%;
   }
 
-  /* Le sommaire reprend toute la largeur, sous les deux colonnes. */
-  .sommaire { grid-column: 1 / -1; max-width: none; }
-  .chiffres { grid-column: 1 / -1; max-width: none; }
+  /* Les blocs « pleine largeur » de l'accueil passent sous les deux colonnes.
+     Le sélecteur à deux classes l'emporte sur « .hero > * », y compris sur sa
+     reprise à 1200 px plus bas, qui resserrait la bande de chiffres. */
+  .hero > .chiffres,
+  .hero > .accueil-titre,
+  .hero > .projets,
+  .hero > .sommaire { grid-column: 1 / -1; max-width: none; }
+  .hero > .projets { grid-template-columns: repeat(3, 1fr); }
+
+  /* À propos : le texte à gauche, l'encart « En bref » à droite. */
+  .a-propos-grille {
+    grid-template-columns: minmax(0, 62ch) minmax(16rem, 22rem);
+    justify-content: space-between;
+    column-gap: var(--esp-xl);
+  }
 
   /* --- LA PAGE CONTACT PASSE EN DEUX COLONNES ---------------------------
      Coordonnées et profils à gauche, formulaire à droite sur toute la hauteur.
@@ -2020,7 +2143,10 @@ a.copier:hover { color: var(--encre); }
   .contact-grille .direct__valeur { font-size: clamp(1rem, 1.7vw, 1.3rem); }
 
   .sommaire { grid-template-columns: repeat(3, 1fr); }
-  .domaines { grid-template-columns: repeat(3, 1fr); }
+  /* Une vignette seule sur la dernière rangée prend toute la largeur :
+     pas de case orpheline dans un coin. */
+  .sommaire > li:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
+  .domaines { columns: 3; }
   .projets  { grid-template-columns: repeat(3, 1fr); }
   .veille   { grid-template-columns: repeat(3, 1fr); }
   .certifs__liste { grid-template-columns: repeat(3, 1fr); }
@@ -2040,7 +2166,6 @@ a.copier:hover { color: var(--encre); }
 @media (min-width: 1200px) {
   .hero > *  { max-width: 52ch; }
   .hero__nom { max-width: none; }
-  .sommaire  { max-width: none; }
   .hero__cadre { width: 340px; height: 340px; max-width: none; }
 }
 
