@@ -725,7 +725,7 @@ const PROJETS = [
     illustration: {
       fichier: "assets/img/schema-tp7-infrastructure.png",
       alt: "Schéma de la maquette : le poste client Windows 11 (Wireshark 4.4.9, carte Ethernet1, 192.168.60.50) est relié par le segment LAN VMware 192.168.60.0/24 au serveur SRVWEB1 sous Debian 13 (carte ens37 en 192.168.60.14, Apache 2 sur les ports 80 et 443, BIND 9 sur le port 53, SSH sur le port 22). La carte ens33 du serveur, en DHCP (192.168.223.164), mène au réseau NAT de VMware et à Internet. Un encadré rappelle les flux : HTTP sur le port 80, lisible en clair ; HTTPS sur le port 443, chiffré en TLS 1.3 ; DNS sur le port 53 ; SSH sur le port 22 pour l'administration.",
-      legende: "Schéma réalisé pour ce portfolio d'après le rapport (plan d'adressage et matrice de flux, sections 3.2 et 3.3). Les écarts avec l'énoncé (maquette entièrement virtuelle, Debian 13, nom d'hôte SRVWEB1) sont détaillés dans la documentation, section 3.1."
+      legende: "Schéma de la figure 1 du rapport (plan d'adressage et matrice de flux, sections 3.2 et 3.3). Les écarts avec l'énoncé (maquette entièrement virtuelle, Debian 13, nom d'hôte SRVWEB1) sont détaillés dans la documentation, section 3.1."
     },
 
     enonce: {
@@ -736,7 +736,7 @@ const PROJETS = [
     document: {
       fichier: "assets/docs/documentation-technique-tp7-ssl-tls.pdf",
       pages: 68,
-      poids: "3,6 Mo",
+      poids: "3,8 Mo",
       resume: "Rapport de réalisation et guide pas à pas : captures Wireshark commentées, tableau de recette de 17 tests, difficultés rencontrées, exploitation et maintenance, aide-mémoire des commandes, glossaire et annexe des fichiers de configuration."
     }
   },
@@ -782,7 +782,7 @@ const PROJETS = [
     illustration: {
       fichier: "assets/img/schema-tp8-infrastructure.png",
       alt: "Schéma de la maquette : le serveur de supervision SRVNAGIOS (Debian Trixie 13, 192.168.60.5, Nagios Core 4.5.11, Nagios Plugins 2.4.12 et interface web Apache 2) et le serveur supervisé SRVAD (Windows Server avec Active Directory et DNS, 192.168.60.2, NSClient++ 0.5.2.41, pare-feu limité à SRVNAGIOS, mot de passe exigé) sont reliés par le segment LAN 192.168.60.0/24, de passerelle 192.168.60.1. Trois flux partent de SRVNAGIOS vers SRVAD : la sonde check_nt sur le port TCP 12489, un ping ICMP qui donne l'état UP, et NRPE sur le port 5666, activé mais non utilisé. Un poste d'administration ouvre l'interface web de SRVNAGIOS sur le port 80. Chaque machine a une carte NAT pour l'accès à Internet. Un encadré liste les quatre services supervisés et leurs seuils : temps de fonctionnement sans seuil, charge CPU et mémoire vive à 80 et 90 %, disque C: à 85 et 90 %.",
-      legende: "Schéma réalisé pour ce portfolio d'après le rapport (plan d'adressage, matrice de flux et services supervisés, sections 3.3, 3.4 et 4.5). Le périmètre se limite à SRVAD : le serveur SRVWEB cité dans l'énoncé n'est pas supervisé. Les écarts avec l'énoncé sont détaillés dans la documentation, section 3.1."
+      legende: "Schéma de la figure 1 du rapport (plan d'adressage, matrice de flux et services supervisés, sections 3.3, 3.4 et 4.5). Le périmètre se limite à SRVAD : le serveur SRVWEB cité dans l'énoncé n'est pas supervisé. Les écarts avec l'énoncé sont détaillés dans la documentation, section 3.1."
     },
 
     enonce: {
@@ -793,7 +793,7 @@ const PROJETS = [
     document: {
       fichier: "assets/docs/documentation-technique-tp8-nagios.pdf",
       pages: 42,
-      poids: "1,3 Mo",
+      poids: "1,7 Mo",
       resume: "Rapport de réalisation et guide pas à pas : captures commentées, tableau des services et seuils, test d'alerte, difficultés rencontrées, exploitation et maintenance, aide-mémoire des commandes et glossaire."
     }
   }
