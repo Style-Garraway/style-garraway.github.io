@@ -294,6 +294,7 @@ const COMPETENCES = [
       { nom: "DNS (rôle Windows Server)",       etat: "service", ou: "TP n°5 — zones directe et inversée" },
       { nom: "DNS (Bind9 sous Debian)",         etat: "service", ou: "TP n°7 — zones, résolution et tests" },
       { nom: "Adressage IPv4 et sous-réseaux",  etat: "service", ou: "TP n°5 à n°7 — plans d'adressage complets" },
+      { nom: "Analyse de trafic — Wireshark 4.4.9", ou: "TP n°7 Bloc 3 — HTTP lisible en clair, HTTPS chiffré, filtres d'affichage" },
       { nom: "Switch Cisco SG 300-10",          etat: "rodage",  ou: "TP n°6 et n°7 — câblage RJ45, mise en réseau physique" },
       { nom: "Cisco Packet Tracer",             etat: "rodage",  ou: "Certifications Cisco Networking Academy" },
       { nom: "Haute disponibilité — cluster actif/passif avec Heartbeat", ou: "TP n°3 Bloc 3 — adresse IP virtuelle, bascule et retour automatiques" },
@@ -323,7 +324,9 @@ const COMPETENCES = [
       { nom: "Confidentialité, intégrité, disponibilité", etat: "rodage", ou: "Projet SHARE — étude de la solution cloud" },
       { nom: "Menaces, vulnérabilités et protection des données", ou: "Certification Cisco Introduction to Cybersecurity — mars 2026" },
       { nom: "Authentification d'un site web (basic, mots de passe bcrypt)", ou: "TP n°6 Bloc 1 — accès réservé à trois comptes" },
-      { nom: "Unités d'organisation et groupes de sécurité", ou: "TP n°1 Bloc 2 — organigramme de la mairie reproduit dans l'annuaire" }
+      { nom: "Unités d'organisation et groupes de sécurité", ou: "TP n°1 Bloc 2 — organigramme de la mairie reproduit dans l'annuaire" },
+      { nom: "Chiffrement des échanges web — SSL/TLS, certificat x509 auto-signé (OpenSSL)", ou: "TP n°7 Bloc 3 — HTTPS sur Apache 2, clé privée en droits 600, TLS 1.3 constaté en capture" },
+      { nom: "Sécurisation d'un agent de supervision — pare-feu Windows, mot de passe", ou: "TP n°8 Bloc 2 — NSClient++ limité à l'adresse du serveur de supervision" }
     ]
   },
 
@@ -333,7 +336,8 @@ const COMPETENCES = [
       { nom: "GLPI 10.0.17",                    etat: "service", ou: "TP n°2 Bloc 2 — installation, profils, cycle de vie des tickets" },
       { nom: "OCS Inventory NG 2.12.1",         etat: "service", ou: "TP n°3 Bloc 2 — inventaire automatique et remontée vers GLPI" },
       { nom: "ITIL — gestion des configurations", etat: "rodage", ou: "TP n°3 Bloc 2 — CMDB et éléments de configuration" },
-      { nom: "Documentation technique", etat: "service", ou: "TP n°6, n°7 et TP n°1 Bloc 2 — documentation de 98 pages" }
+      { nom: "Documentation technique", etat: "service", ou: "TP n°6, n°7 et TP n°1 Bloc 2 — documentation de 98 pages" },
+      { nom: "Supervision — Nagios Core 4.5.11, NSClient++, sonde check_nt", ou: "TP n°8 Bloc 2 — hôte SRVAD et 4 services surveillés avec seuils, alerte validée par l'arrêt de l'agent" }
     ]
   },
 
@@ -678,6 +682,119 @@ const PROJETS = [
       pages: 113,
       poids: "7,4 Mo",
       resume: "Rapport de réalisation et guide pas à pas en 14 étapes : captures commentées, difficultés rencontrées, exploitation et maintenance, aide-mémoire des commandes, glossaire et annexe des fichiers de configuration."
+    }
+  },
+
+  /* ======================================================================
+     TP n°7 — SSL/TLS sur Apache 2 (Bloc 3). Contenu tire de la documentation,
+     section par section : rien n'est ajoute qui n'y figure pas.
+     ====================================================================== */
+  {
+    id: "ssl-tls-apache",
+    titre: "Sécurisation d'un site web Apache avec SSL/TLS",
+    sousTitre: "TP n°7 — Bloc 3, Sécurité des serveurs et des systèmes",
+    periode: "Novembre 2026",
+    tags: ["Debian 13", "Apache 2", "SSL/TLS", "OpenSSL", "Wireshark", "BIND9", "VMware"],
+
+    contexte: "L'entreprise Les Jardins de Saint-Eloi veut sécuriser les échanges entre son site web et ses clients internautes. Elle a confié le projet à l'ESN C2I Caraïbes, implantée en Guadeloupe et en Martinique, et je suis stagiaire auprès du développeur chargé de la mission. La réalisation s'est faite sur une maquette entièrement virtuelle : un serveur Debian 13 (SRVWEB1) et un poste client Windows 11, reliés par un segment réseau isolé, avec une carte NAT pour l'accès à Internet.",
+
+    probleme: "En HTTP, les pages circulent en clair entre le navigateur et le serveur : quiconque capte le trafic peut les lire. Le site doit être servi en HTTPS, avec un certificat, et le chiffrement doit être prouvé par une capture du trafic, pas seulement affirmé.",
+
+    solution: "Sur le serveur, deux cartes réseau (ens33 en DHCP sur le réseau NAT, ens37 en adresse fixe 192.168.60.14/24 sur le segment LAN) et un serveur DNS BIND9 qui résout srvlinux et www dans la zone jardinssteloi.fr. Avec Wireshark 4.4.9 sur le poste client, je capture d'abord le trafic HTTP, où la requête et la réponse se lisent en clair. Je génère ensuite avec OpenSSL une clé privée et un certificat x509 auto-signé valable 365 jours, puis je configure Apache 2 : module ssl, site HTTPS sur le port 443, clé en droits 600. Une seconde capture, sur le port 443, montre le même échange chiffré.",
+
+    outils: ["Debian 13 Trixie", "Apache 2", "OpenSSL 3.5", "BIND9", "Wireshark 4.4.9", "Windows 11", "VMware Workstation", "SSH"],
+
+    resultats: [
+      "Trafic HTTP prouvé lisible en clair : la requête (paquet 1246) et la réponse (paquet 1248) se lisent dans Wireshark.",
+      "Certificat x509 auto-signé (365 jours) et clé privée en droits 600 ; Apache 2 sert le site en HTTPS sur le port 443.",
+      "Capture sur le port 443 : TLS 1.3, contenu affiché « Encrypted Application Data », et aucun paquet HTTP parmi les 130 capturés.",
+      "Recette de 17 tests : 16 conformes, 1 non prouvé (la mise à jour des paquets, faute de capture). Le navigateur signale le certificat comme non fiable (NET::ERR_CERT_AUTHORITY_INVALID), ce qui est le comportement attendu d'un certificat auto-signé.",
+      "Limites relevées dans le rapport : un certificat auto-signé ne garantit pas l'identité du serveur, et le port 80 reste ouvert sans redirection."
+    ],
+
+    appris: "Chiffrer ne suffit pas à prouver qui est le serveur : un certificat auto-signé protège la lecture des échanges, pas l'identité du site, et un site public demande un certificat délivré par une autorité reconnue. J'ai aussi appris qu'en TLS 1.3 le certificat est lui-même chiffré, donc invisible dans Wireshark : il faut l'afficher depuis le navigateur ou avec openssl x509. Enfin, l'énoncé contenait des écarts avec la réalité (Debian Bookworm et Trixie mélangés, un site recopié d'un autre TP, des tirets typographiques qui cassent la commande openssl) : l'environnement réel fait foi, et je l'ai documenté. Les pistes que je n'ai pas appliquées sont un certificat d'autorité reconnue, l'extension subjectAltName, et la redirection du port 80 vers le 443 avec HSTS.",
+
+    referentiel: [
+      "Installer et configurer des éléments d'infrastructure",
+      "Déployer une solution d'infrastructure",
+      "Administrer un système",
+      "Tester l'intégration et l'acceptation d'une solution d'infrastructure",
+      "Rédiger ou mettre à jour la documentation technique et utilisateur d'une solution d'infrastructure"
+    ],
+
+    illustration: {
+      fichier: "assets/img/schema-tp7-infrastructure.jpg",
+      alt: "Schéma de la maquette : un poste client Windows 11 (192.168.60.50, Wireshark 4.4.9) relié par le segment LAN VMware 192.168.60.0/24 au serveur SRVWEB1 sous Debian 13 (Apache 2 sur les ports 80 et 443, BIND 9 sur le port 53, ens37 en 192.168.60.14, ens33 en DHCP), lui-même relié au réseau NAT de VMware vers Internet.",
+      legende: "Schéma du rapport (figure 1). Les écarts avec l'énoncé (maquette entièrement virtuelle, Debian 13, nom d'hôte SRVWEB1) sont détaillés dans la documentation, section 3.1."
+    },
+
+    enonce: {
+      fichier: "assets/docs/enonce-tp7-bloc3.pdf",
+      poids: "0,9 Mo"
+    },
+
+    document: {
+      fichier: "assets/docs/documentation-technique-tp7-ssl-tls.pdf",
+      pages: 68,
+      poids: "3,6 Mo",
+      resume: "Rapport de réalisation et guide pas à pas : captures Wireshark commentées, tableau de recette de 17 tests, difficultés rencontrées, exploitation et maintenance, aide-mémoire des commandes, glossaire et annexe des fichiers de configuration."
+    }
+  },
+
+  /* ======================================================================
+     TP n°8 — Supervision avec Nagios (Bloc 2). Contenu tire de la
+     documentation, section par section : rien n'est ajoute qui n'y figure pas.
+     ====================================================================== */
+  {
+    id: "nagios-supervision",
+    titre: "Supervision de serveurs avec Nagios pour la mairie des Abymes",
+    sousTitre: "TP n°8 — Bloc 2, Administration des systèmes",
+    periode: "Novembre 2026",
+    tags: ["Nagios Core 4.5.11", "NSClient++", "check_nt", "Debian 13", "Apache 2", "Windows Server", "VMware"],
+
+    contexte: "M. Laurent, responsable du service informatique de la ville des Abymes, veut une solution de supervision pour être alerté en cas d'incident. Un serveur de supervision, SRVNAGIOS, est installé puis configuré pour surveiller SRVAD, le contrôleur de domaine Active Directory et serveur DNS de la ville. La réalisation s'est faite sur une maquette de deux machines virtuelles, SRVNAGIOS sous Debian et SRVAD sous Windows Server, sur le réseau 192.168.60.0/24.",
+
+    probleme: "Le service informatique veut connaître en continu l'état de ses serveurs et être prévenu quand quelque chose ne va plus. Il faut un serveur qui interroge automatiquement SRVAD, sans autre intervention sur le serveur surveillé que l'installation d'un agent, et qui signale un état anormal selon des seuils d'alerte.",
+
+    solution: "Sur SRVNAGIOS (Debian Trixie 13, 192.168.60.5), j'installe Nagios Core 4.5.11 et ses plugins depuis les sources, avec son interface web servie par Apache 2 et protégée par mot de passe. Sur SRVAD, je déploie l'agent NSClient++ 0.5.2.41, protégé par un mot de passe et par une règle de pare-feu Windows qui n'accepte que l'adresse de SRVNAGIOS. SRVNAGIOS l'interroge avec la sonde check_nt sur le port 12489. Je déclare ensuite l'hôte srvad et quatre services : temps de fonctionnement, charge CPU, mémoire vive et espace disque de C:, avec des seuils d'alerte à 80 ou 85 % (warning) et 90 % (critical).",
+
+    outils: ["Nagios Core 4.5.11", "Nagios Plugins 2.4.12", "NSClient++ 0.5.2.41", "check_nt", "Debian 13 Trixie", "Apache 2", "Windows Server", "Pare-feu Windows", "VMware Workstation Pro"],
+
+    resultats: [
+      "L'hôte srvad est UP et les 12 services supervisés sont OK : 8 pour le serveur de supervision lui-même et 4 pour SRVAD.",
+      "Test d'alerte : l'arrêt de l'agent (net stop nscp) fait passer les 4 services de SRVAD en CRITICAL, avec « connexion refusée » ; après redémarrage de l'agent, ils reviennent tous à OK.",
+      "Agent sécurisé : il n'accepte que l'adresse de SRVNAGIOS et exige un mot de passe ; l'interface web de Nagios est elle aussi protégée par mot de passe.",
+      "Une difficulté diagnostiquée et corrigée : les services restaient en UNKNOWN « Invalid password » parce que l'option -s manquait dans la commande check_nt de commands.cfg ; après correction, la vérification nagios -v affiche 0 erreur.",
+      "Limites relevées dans le rapport : seul SRVAD est supervisé (SRVWEB ne l'est pas) et les notifications par courriel ne sont pas encore configurées."
+    ],
+
+    appris: "La supervision tient à un accord entre les deux côtés : le mot de passe doit être identique dans nsclient.ini et dans commands.cfg, le module CheckDisk doit être activé pour que le disque remonte une valeur, et un oubli de make install suffit à rendre la sonde introuvable. J'ai aussi retenu qu'un test d'alerte vaut mieux qu'un écran tout vert : c'est l'arrêt volontaire de l'agent qui prouve que la panne est détectée, puis que le retour à la normale l'est aussi. L'énoncé contenait des valeurs génériques (192.168.X.2) et des coquilles (/etc/apche2, CheckSytem) que j'ai corrigées et signalées. La suite logique est de superviser SRVWEB par NRPE, de configurer les notifications par courriel et de suivre des services applicatifs.",
+
+    referentiel: [
+      "Installer et configurer une solution de disponibilité d'un serveur",
+      "Administrer un système",
+      "Contrôler et améliorer les performances d'un système",
+      "Mettre à disposition un service informatique (supervision)",
+      "Sécuriser un serveur et une solution d'accès (pare-feu, authentification)",
+      "Valider et documenter une solution"
+    ],
+
+    illustration: {
+      fichier: "assets/img/schema-tp8-infrastructure.png",
+      alt: "Schéma de la maquette : SRVNAGIOS, le superviseur (Debian Trixie 13, Nagios Core 4.5.11 et Apache 2, 192.168.60.5), et SRVAD, le serveur supervisé (Windows Server avec Active Directory et DNS, NSClient++ 0.5.2.41, 192.168.60.2), sont reliés par un switch sur le réseau 192.168.60.0/24. SRVNAGIOS interroge SRVAD avec la sonde check_nt sur le port TCP 12489. Chaque machine a une seconde carte NAT pour l'accès à Internet.",
+      legende: "Schéma du rapport (figure 1). Le périmètre se limite à SRVAD : le serveur SRVWEB cité dans l'énoncé n'est pas supervisé. Les écarts avec l'énoncé sont détaillés dans la documentation, section 3.1."
+    },
+
+    enonce: {
+      fichier: "assets/docs/enonce-tp8-bloc2.pdf",
+      poids: "0,9 Mo"
+    },
+
+    document: {
+      fichier: "assets/docs/documentation-technique-tp8-nagios.pdf",
+      pages: 42,
+      poids: "1,3 Mo",
+      resume: "Rapport de réalisation et guide pas à pas : captures commentées, tableau des services et seuils, test d'alerte, difficultés rencontrées, exploitation et maintenance, aide-mémoire des commandes et glossaire."
     }
   }
 
